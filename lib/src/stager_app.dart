@@ -14,6 +14,8 @@ class StagerApp extends StatelessWidget {
     return DevicePreview(
       builder: (context) => MaterialApp(
         builder: DevicePreview.appBuilder,
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
         useInheritedMediaQuery: true,
         locale: DevicePreview.locale(context),
         home: Scaffold(
