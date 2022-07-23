@@ -1,5 +1,4 @@
-import 'package:stager/stager.dart' as stager;
+import 'package:build/build.dart';
+import 'package:stager/builder.dart' as b;
 
-void main(List<String> arguments) {
-  print('Hello world: ${stager.calculate()}!');
-}
+Builder buildStagerApp(BuilderOptions options) => b.buildStagerApp(options);
