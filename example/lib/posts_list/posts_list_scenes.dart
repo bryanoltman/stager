@@ -19,27 +19,11 @@ abstract class BasePostsListScene extends Scene {
   @override
   Widget build() {
     return Builder(builder: (context) {
-      // If we already have a navigator, do not wrap this widget in a
-      // MaterialApp.
-      bool hasNavigator = true;
-      try {
-        Navigator.of(context);
-      } on FlutterError {
-        // Navigator.of(context) throws a FlutterError if no Navigator is found.
-        hasNavigator = false;
-      }
-
-      final widget = Provider<Api>.value(
-        value: mockApi,
-        child: const PostsList(),
-      );
-
-      if (hasNavigator) {
-        return widget;
-      }
-
       return MaterialApp(
-        home: widget,
+        home: Provider<Api>.value(
+          value: mockApi,
+          child: const PostsList(),
+        ),
       );
     });
   }
