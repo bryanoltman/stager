@@ -18,14 +18,12 @@ abstract class BasePostsListScene extends Scene {
 
   @override
   Widget build() {
-    return Builder(builder: (context) {
-      return MaterialApp(
-        home: Provider<Api>.value(
-          value: mockApi,
-          child: const PostsList(),
-        ),
-      );
-    });
+    return MaterialApp(
+      home: Provider<Api>.value(
+        value: mockApi,
+        child: const PostsList(),
+      ),
+    );
   }
 
   @override
