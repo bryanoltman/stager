@@ -21,7 +21,6 @@ abstract class BasePostsListScene extends Scene {
     return MaterialApp(
       home: Provider<Api>.value(
         value: mockApi,
-        // child: Builder(builder: (context) => const PostsList()),
         child: const PostsList(),
       ),
     );
