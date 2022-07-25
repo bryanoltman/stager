@@ -12,11 +12,5 @@ class SceneWidget extends StatefulWidget {
 
 class _SceneWidgetState extends State<SceneWidget> {
   @override
-  void initState() {
-    super.initState();
-    widget.scene.setUp();
-  }
-
-  @override
   Widget build(BuildContext context) => widget.scene.build();
 }
