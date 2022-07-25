@@ -25,6 +25,7 @@ abstract class BasePostsListScene extends Scene {
       try {
         Navigator.of(context);
       } on FlutterError {
+        // Navigator.of(context) throws a FlutterError if no Navigator is found.
         hasNavigator = false;
       }
 
