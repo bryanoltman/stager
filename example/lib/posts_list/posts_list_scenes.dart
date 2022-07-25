@@ -23,7 +23,7 @@ abstract class BasePostsListScene extends Scene {
       // MaterialApp.
       bool hasNavigator = true;
       try {
-        final _ = Navigator.of(context);
+        Navigator.of(context);
       } on FlutterError {
         hasNavigator = false;
       }
