@@ -36,7 +36,7 @@ class _SceneListState extends State<SceneList> with RouteAware {
     super.initState();
     _overlayButton = OverlayEntry(
       builder: (context) => Align(
-        alignment: Alignment.bottomRight,
+        alignment: Alignment.topLeft,
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.all(10),
