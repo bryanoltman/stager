@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stager/src/environment_manipulation_panel.dart';
 
 import 'multifinger_long_press_gesture.dart';
 
@@ -46,52 +47,20 @@ class _SceneContainerState extends State<SceneContainer> {
             SafeArea(
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Material(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed:
-                              Navigator.of(context, rootNavigator: true).pop,
-                          icon: Icon(Icons.arrow_back),
-                        ),
-                        IconButton(
-                          onPressed: () => setState(() {
-                            _isDarkMode = !_isDarkMode;
-                          }),
-                          icon: Icon(Icons.light_mode),
-                        ),
-                        IconButton(
-                          onPressed: () => setState(() {
-                            _textScale -= 0.1;
-                          }),
-                          icon: Icon(Icons.text_decrease),
-                        ),
-                        IconButton(
-                          onPressed: () => setState(() {
-                            _textScale += 0.1;
-                          }),
-                          icon: Icon(Icons.text_increase),
-                        ),
-                        DropdownButton<TargetPlatform>(
-                          items: TargetPlatform.values
-                              .map(
-                                (e) => DropdownMenuItem(
-                                  value: e,
-                                  child: Text(e.name),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (newPlatform) => setState(() {
-                            _targetPlatform = newPlatform;
-                          }),
-                          value: _targetPlatform ?? Theme.of(context).platform,
-                        ),
-                      ],
-                    ),
-                  ),
+                child: EnvironmentManipulationPanel(
+                  targetPlatform: _targetPlatform,
+                  toggleDarkMode: () => setState(() {
+                    _isDarkMode = !_isDarkMode;
+                  }),
+                  decrementTextScale: () => setState(() {
+                    _textScale -= 0.1;
+                  }),
+                  incrementTextScale: () => setState(() {
+                    _textScale += 0.1;
+                  }),
+                  onTargetPlatformChanged: (targetPlatform) => setState(() {
+                    _targetPlatform = targetPlatform;
+                  }),
                 ),
               ),
             ),
