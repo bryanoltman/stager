@@ -85,7 +85,6 @@ class _SceneContainerState extends State<SceneContainer> {
                               )
                               .toList(),
                           onChanged: (newPlatform) => setState(() {
-                            print('changing target platform to $newPlatform');
                             _targetPlatform = newPlatform;
                           }),
                           value: _targetPlatform ?? Theme.of(context).platform,
