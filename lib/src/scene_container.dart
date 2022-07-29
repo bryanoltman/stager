@@ -28,7 +28,9 @@ class _SceneContainerState extends State<SceneContainer> {
     return MultiTouchLongPressGestureDetector(
       numberOfTouches: 2,
       onGestureDetected: () => setState(() {
-        _showEnvPanel = !_showEnvPanel;
+        setState(() {
+          _showEnvPanel = !_showEnvPanel;
+        });
       }),
       child: Stack(
         children: [
@@ -43,27 +45,31 @@ class _SceneContainerState extends State<SceneContainer> {
               child: widget.child,
             ),
           ),
-          if (_showEnvPanel)
-            SafeArea(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: EnvironmentManipulationPanel(
-                  targetPlatform: _targetPlatform,
-                  toggleDarkMode: () => setState(() {
-                    _isDarkMode = !_isDarkMode;
-                  }),
-                  decrementTextScale: () => setState(() {
-                    _textScale -= 0.1;
-                  }),
-                  incrementTextScale: () => setState(() {
-                    _textScale += 0.1;
-                  }),
-                  onTargetPlatformChanged: (targetPlatform) => setState(() {
-                    _targetPlatform = targetPlatform;
-                  }),
-                ),
-              ),
+          AnimatedPositioned(
+            left: 0,
+            right: 0,
+            bottom: _showEnvPanel ? 0 : -100,
+            duration: Duration(milliseconds: 250),
+            curve: Curves.easeOut,
+            child: EnvironmentManipulationPanel(
+              targetPlatform: _targetPlatform,
+              toggleDarkMode: () => setState(() {
+                _isDarkMode = !_isDarkMode;
+              }),
+              decrementTextScale: () => setState(() {
+                _textScale -= 0.1;
+              }),
+              incrementTextScale: () => setState(() {
+                _textScale += 0.1;
+              }),
+              onTargetPlatformChanged: (targetPlatform) => setState(() {
+                _targetPlatform = targetPlatform;
+              }),
+              hidePanel: () => setState(() {
+                _showEnvPanel = false;
+              }),
             ),
+          ),
         ],
       ),
     );
