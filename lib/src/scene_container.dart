@@ -48,6 +48,8 @@ class _SceneContainerState extends State<SceneContainer> {
           AnimatedPositioned(
             left: 0,
             right: 0,
+            // 100 was chosen arbitrarily as a "high enough" value to ensure the
+            // panel is not visible when animated out.
             bottom: _showEnvPanel ? 0 : -100,
             duration: Duration(milliseconds: 250),
             curve: Curves.easeOut,
