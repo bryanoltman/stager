@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// A [MaterialApp] that inherits its [MediaQuery] and applies the
-/// [targetPlatform] from its ancestors to default Material dark and light
-/// themes.
+/// [platform] from its ancestors to default Material dark and light themes.
 ///
 /// This class makes it easier to write Scenes that interact well with the
 /// environment manipulation feature provided by [StagerApp]. This class is not
