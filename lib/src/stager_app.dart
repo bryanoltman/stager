@@ -22,7 +22,7 @@ class StagerApp extends StatefulWidget {
 }
 
 class _StagerAppState extends State<StagerApp> {
-  late Future<void> _sceneInitFuture;
+  late Future<void> _sceneSetUpFuture;
 
   bool get _isSingleScene => widget.scenes.length == 1;
 
@@ -30,16 +30,16 @@ class _StagerAppState extends State<StagerApp> {
   void initState() {
     super.initState();
     if (_isSingleScene) {
-      _sceneInitFuture = widget.scenes.first.setUp();
+      _sceneSetUpFuture = widget.scenes.first.setUp();
     } else {
-      _sceneInitFuture = Future.value();
+      _sceneSetUpFuture = Future.value();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _sceneInitFuture,
+      future: _sceneSetUpFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
