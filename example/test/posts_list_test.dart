@@ -1,4 +1,4 @@
-import 'package:example/posts_list/posts_list_scenes.dart';
+import 'package:example/pages/posts_list/posts_list_page_scenes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
