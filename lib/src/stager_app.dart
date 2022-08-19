@@ -3,6 +3,16 @@ import 'package:flutter/material.dart';
 import 'scene.dart';
 import 'scene_container.dart';
 
+Future<void> runStagerApp({required List<Scene> scenes}) async {
+  if (scenes.length == 1) {
+    final scene = scenes.first;
+    await scene.setUp();
+    runApp(StagerApp(scenes: [scene]));
+  } else {
+    runApp(StagerApp(scenes: scenes));
+  }
+}
+
 /// A simple app that displays a list of [Scene]s and navigates to them on tap.
 ///
 /// If only one Scene is provided, that Scene will be shown as though it had

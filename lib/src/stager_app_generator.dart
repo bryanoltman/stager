@@ -42,7 +42,6 @@ class StagerAppGenerator extends Generator {
     buffer.write('''
 $importsString
 
-import 'package:flutter/material.dart';
 import 'package:stager/stager.dart';
 
 Future<void> main() async {
@@ -53,10 +52,9 @@ Future<void> main() async {
   if (const String.fromEnvironment('Scene').isNotEmpty) {
     const sceneName = String.fromEnvironment('Scene');
     final scene = scenes.firstWhere((scene) => scene.title == sceneName);
-    await scene.setUp();
-    runApp(StagerApp(scenes: [scene]));
+    runStagerApp(scenes: [scene]);
   } else {
-    runApp(StagerApp(scenes: scenes));
+    runStagerApp(scenes: scenes);
   }
 }
 ''');
