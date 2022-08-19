@@ -8,7 +8,7 @@ import 'posts_list_scenes.dart';
 
 import 'package:stager/stager.dart';
 
-Future<void> main() async {
+void main() {
   final scenes = [
     EmptyListScene(),
     WithPostsScene(),
