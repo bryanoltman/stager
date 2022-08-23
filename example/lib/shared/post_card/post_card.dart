@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../post.dart';
 
+/// A [Card] that displays a single [Post], intended to be used in a list.
 class PostCard extends StatelessWidget {
   final Post post;
   final VoidCallback? onTap;

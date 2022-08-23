@@ -1,5 +1,6 @@
 import 'user.dart';
 
+/// A single tweet-like entry.
 class Post {
   final int id;
   final String text;

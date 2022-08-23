@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../shared/user.dart';
 
+/// A page for a single [User].
 class UserDetailPage extends StatefulWidget {
   final User user;
 

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../shared/api.dart';
 import '../../shared/post.dart';
 
+/// Shows a timeline view of all [Post]s.
 class PostsListPage extends StatefulWidget {
   const PostsListPage({super.key});
 

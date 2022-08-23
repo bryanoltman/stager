@@ -58,3 +58,34 @@ class EmptyUserDetailPageScene extends UserDetailPageScene {
     when(mockApi.fetchPosts(user: user)).thenAnswer((_) async => []);
   }
 }
+
+class WithPostsUserDetailPageScene extends UserDetailPageScene {
+  @override
+  String get title => 'With posts';
+
+  @override
+  Future<void> setUp() async {
+    await super.setUp();
+    when(mockApi.fetchPosts(user: user)).thenAnswer(
+      (_) async => Post.fakePosts(user: user),
+    );
+  }
+}
+
+class ComplexUserDetailPageScene extends UserDetailPageScene {
+  @override
+  String get title => 'User with long name';
+
+  @override
+  Future<void> setUp() async {
+    await super.setUp();
+    user = User(
+      id: 1234,
+      handle: '@asdf',
+      name: 'Super cool poster with great hot takes',
+    );
+    when(mockApi.fetchPosts(user: user)).thenAnswer(
+      (_) async => Post.fakePosts(),
+    );
+  }
+}

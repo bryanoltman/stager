@@ -1,3 +1,4 @@
+/// A person or entity that creates [Post]s.
 class User {
   final int id;
   final String name;

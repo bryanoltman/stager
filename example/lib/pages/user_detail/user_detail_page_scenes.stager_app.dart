@@ -13,6 +13,8 @@ Future<void> main() async {
   final scenes = [
     LoadingUserDetailPageScene(),
     EmptyUserDetailPageScene(),
+    WithPostsUserDetailPageScene(),
+    ComplexUserDetailPageScene(),
   ];
 
   if (const String.fromEnvironment('Scene').isNotEmpty) {

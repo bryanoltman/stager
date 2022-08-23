@@ -2,6 +2,7 @@ import 'package:example/pages/user_detail/user_detail_page.dart';
 import 'package:example/shared/post.dart';
 import 'package:flutter/material.dart';
 
+/// A page for a single [Post].
 class PostDetailPage extends StatelessWidget {
   final Post post;
 

@@ -4,6 +4,7 @@ import '../../pages/post_detail/post_detail_page.dart';
 import '../post.dart';
 import '../post_card/post_card.dart';
 
+/// A [ListView] of [PostCard]s
 class PostsList extends StatefulWidget {
   final Future<List<Post>> postsFuture;
 
