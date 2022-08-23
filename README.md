@@ -193,3 +193,12 @@ testWidgets('shows an empty state', (WidgetTester tester) async {
   expect(find.text('No posts'), findsOneWidget);
 });
 ```
+
+## Example
+
+See the example directory for a demo that highlights some of Stager's benefits, specifically:
+
+1. The ability to quickly move between different states (empty, loading, etc.) without having to make changes to app code
+to "fake" those states.
+2. The ability to easily develop a hard-to-reach screen.
+3. The ability to alter environment settings that would otherwise require a trip to the Settings app.
