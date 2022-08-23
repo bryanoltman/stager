@@ -48,6 +48,19 @@ class LoadingUserDetailPageScene extends UserDetailPageScene {
   }
 }
 
+class ErrorUserDetailPageScene extends UserDetailPageScene {
+  @override
+  String get title => 'Error';
+
+  @override
+  Future<void> setUp() async {
+    await super.setUp();
+    when(mockApi.fetchPosts(user: user)).thenAnswer(
+      (_) async => Future.error(Exception('on no!')),
+    );
+  }
+}
+
 class EmptyUserDetailPageScene extends UserDetailPageScene {
   @override
   String get title => 'Empty';

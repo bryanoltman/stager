@@ -4,16 +4,13 @@
 // StagerAppGenerator
 // **************************************************************************
 
-import 'posts_list_page_scenes.dart';
+import 'post_detail_page_scenes.dart';
 
 import 'package:stager/stager.dart';
 
 void main() {
   final scenes = [
-    EmptyListScene(),
-    WithPostsScene(),
-    LoadingScene(),
-    ErrorScene(),
+    PostDetailPageScene(),
   ];
 
   if (const String.fromEnvironment('Scene').isNotEmpty) {
