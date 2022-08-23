@@ -37,6 +37,18 @@ A function that constructs your widget.
 
 A StagerApp displays a list of Scenes, allow the user to select from all available Scenes. Because Scenes can contain their own Navigators, the StagerApp overlays a back button on top of the Scenes.
 
+## Demo
+
+See the example directory for a demo that highlights some of the useful things Stager allows you to do, including:
+
+1. The ability to alter environment settings (dark/light mode, text size, etc.) that would otherwise require
+a trip to the Settings app or require booting up another emulator/simulator or device.
+1. The ability to reuse Scenes in widget tests. If you aren't already writing widget tests, Scenes make it **very** easy
+to start.
+1. The ability to quickly move between different states (empty, loading, etc.) without having to make changes to app code
+to "fake" those states.
+1. The ability to easily develop a hard-to-reach screens.
+
 ## Use
 
 Imagine you have the following widget buried deep in your application:
@@ -193,12 +205,3 @@ testWidgets('shows an empty state', (WidgetTester tester) async {
   expect(find.text('No posts'), findsOneWidget);
 });
 ```
-
-## Example
-
-See the example directory for a demo that highlights some of Stager's benefits, specifically:
-
-1. The ability to quickly move between different states (empty, loading, etc.) without having to make changes to app code
-to "fake" those states.
-2. The ability to easily develop a hard-to-reach screen.
-3. The ability to alter environment settings that would otherwise require a trip to the Settings app.
