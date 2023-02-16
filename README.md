@@ -13,7 +13,7 @@ Stager can accelerate your development workflow for widgets that:
 
 A Stager app for a ListView displaying forum-style posts:
 
-![example app demo](https://user-images.githubusercontent.com/581764/181614468-cbb89cbe-d16a-44bf-831e-47139ce3a7c0.gif)
+![example app demo](https://user-images.githubusercontent.com/581764/219502623-bfe44091-a582-460e-b97d-e786bc614a8c.gif)
 
 ## Concepts
 
