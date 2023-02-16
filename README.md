@@ -231,6 +231,61 @@ You can launch to a specific scene by providing the name of the scene as an argu
 flutter run -t path/to/my_scenes.stager_app.g.dart --dart-define='Scene=No Posts'
 ```
 
+### Adding your own environment controls
+
+Stager's control panel comes with a generally useful set of controls that enable you to toggle dark mode, adjust text scale, etc. However, it is very likely that your app has unique environment properties that would be useful to adjust. To support this, Scenes have an overridable `environmentControlBuilders` property which allows you to add custom widgets to the default set of environment manipulation controls.
+
+A very simple example:
+
+```dart
+class CounterScene extends Scene {
+  // Define a custom property that is consumed by the Scene.
+  // This might be something as simple as an int, or something
+  // more complex, like a mocked network service.
+  int count = 0;
+
+  @override
+  Widget build() {
+    return EnvironmentAwareApp(
+      home: Scaffold(
+        body: Center(
+          child: Text(count.toString()),
+        ),
+      ),
+    );
+ }
+
+  @override
+  String get title => 'Counter';
+
+  @override
+  List<EnvironmentControlBuilder> get environmentControlBuilders => [
+        (BuildContext context, VoidCallback rebuildScene) {
+          // NumberStepperControl is a widget provided by Stager for convenience.
+          // However, your EnvironmentControlBuilder can return any arbitrary widget.
+          return NumberStepperControl(
+            title: const Text('Count'),
+            value: count,
+            onDecrementPressed: () {
+              count -= 1;
+
+              // Call rebuildScene to update the Scene with count's new value
+              rebuildScene();
+            },
+            onIncrementPressed: () {
+              count += 1;
+
+              // Call rebuildScene to update the Scene with count's new value
+              rebuildScene();
+            },
+          );
+        }
+      ];
+}
+```
+
+More complex examples can be found in `WithPostsScene` in `example/lib/pages/posts_list/posts_list_page_scenes.dart` and `PostDetailPageScene` in `example/lib/pages/post_detail/post_detail_page_scenes.dart`.
+
 ## Testing
 
 You may notice that these names are very similar to Flutter testing functions. This is intentional – Scenes are very easy to reuse in tests. Writing Scenes for your widgets can be a great way to start writing widget tests or to expand your widget test coverage. A widget test using a Scene can be as simple as this:
