@@ -153,7 +153,7 @@ Normally, exercising all states in this widget would involve:
 
 Scenes present a better way to do this.
 
-### Building a Scene
+### Making a Scene
 
 We can create a Scene for each state we want to show. For example, a Scene showing the empty state might look something like:
 
