@@ -198,8 +198,6 @@ class EmptyListScene extends BasePostsListScene {
 }
 ```
 
-See the example project for more scenes.
-
 ### Running a StagerApp
 
 To generate the `StagerApp`, run:
