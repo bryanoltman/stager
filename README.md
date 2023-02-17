@@ -6,7 +6,7 @@ Stager is a Flutter development tool that allows you to run small portions of yo
 
 - Focus your development on a single widget or flow – no more clicking through multiple screens or setting external feature flags to reach the page you're working on.
 - Ensure your UI works in *all* cases, including:
-  - Dark mode
+  - Light/Dark mode
   - Small or large text sizes
   - Different viewport sizes
   - Different device types
