@@ -2,54 +2,76 @@
 
 # Stager
 
-Stager enables rapid Flutter development and encourages good architectural practices by allowing developers quickly launch and develop isolated portions of an app.
+Stager is a Flutter development tool that allows you to run small portions of your app as individual Flutter apps. This lets you:
 
-Stager can accelerate your development workflow for widgets that:
+- Focus your development on a single widget or flow – no more clicking through multiple screens or setting external feature flags to reach the page you're working on.
+- Ensure your UI works in *all* cases, including:
+  - Dark mode
+  - Small or large text sizes
+  - Different viewport sizes
+  - Different device types
+  - Loading, empty, error, and normal states
+- Show all of this to your designers to make sure your app is pixel-perfect.
 
-- Have multiple states (empty, error, loading, etc.) that would otherwise require code changes to trigger.
-- Are cumbersome to navigate to.
-- Are hidden behind a feature flag.
-- Behave differently based on external state (e.g., the type of currently logged-in user).
-
-A Stager app for a ListView displaying forum-style posts:
+## Demo
 
 ![example app demo](https://user-images.githubusercontent.com/581764/219502623-bfe44091-a582-460e-b97d-e786bc614a8c.gif)
+
+The example included in this repo demonstrates how Stager can be used in the context of a simple Twitter-like app that displays a feed of posts and includes detail pages for posts and users.
+
+Stager uses Scenes (see the [Concepts](#concepts) section below) that you define to generate small Flutter apps. To run the Stager apps included in the example, start by moving to the `example` directory and fetching the app's dependencies:
+
+```bash
+cd example
+flutter pub get
+```
+
+You can then run the indivdual Stager apps with the following commands:
+
+**User Detail**
+```bash
+flutter run -t lib/pages/user_detail/user_detail_page_scenes.stager_app.g.dart
+```
+
+**Posts List**
+```bash
+flutter run -t lib/pages/posts_list/posts_list_page_scenes.stager_app.g.dart
+```
+
+**Post Detail**
+```bash
+flutter run -t lib/pages/post_detail/post_detail_page_scenes.stager_app.g.dart
+```
+
+To get an idea of how these Scenes fit together, you can also run the main app by executing `flutter run` from the `example` directory.
 
 ## Concepts
 
 ### Scene
 
-The most important class in Stager is the Scene class. A Scene is a simple, self-contained unit of UI. Scenes make it easy to focus on a single widget or page to greatly increase development velocity by isolating them from the rest of your app and allowing fine control of dependencies.
+A Scene is a simple, self-contained unit of UI, and is the most important idea in Stager. Scenes make it easy to focus on a single widget or page to greatly increase development velocity by isolating them from the rest of your app and allowing fine control of dependencies.
 
-A Scene has three parts:
+To create your own Scene, simply create a `Scene` subclass and implement `title`, the name of your Scene, and `build()`, which constructs the widget you wish to develop or preview.
 
-#### `title`
-
-The name of the Scene.
+You can also override the following methods and properties:
 
 #### `setUp`
 
 A function that is called once before the Scene is displayed. This will generally be where you configure your widget's dependencies.
 
-#### `build`
+#### `environmentControlBuilders`
 
-A function that constructs your widget.
+An optional list of `WidgetBuilder`-like functions that allow you to add custom Widgets to the Stager control panel. These are useful if you want to manipulate things specific to your app, including:
+
+- Data displayed by your Widget
+- Properties on mocked dependenices
+- Feature flags
+
+You can return any arbitrary Widget from these functions.
 
 ### StagerApp
 
 A StagerApp displays a list of Scenes, allow the user to select from all available Scenes. Because Scenes can contain their own Navigators, the StagerApp overlays a back button on top of the Scenes.
-
-## Demo
-
-See the example directory for a demo that highlights some of the useful things Stager allows you to do, including:
-
-1. The ability to alter environment settings (dark/light mode, text size, etc.) that would otherwise require
-a trip to the Settings app or require booting up another emulator/simulator or device.
-1. The ability to reuse Scenes in widget tests. If you aren't already writing widget tests, Scenes make it **very** easy
-to start.
-1. The ability to quickly move between different states (empty, loading, etc.) without having to make changes to app code
-to "fake" those states.
-1. The ability to easily develop a hard-to-reach screens.
 
 ## Use
 
