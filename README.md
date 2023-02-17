@@ -155,7 +155,7 @@ Scenes present a better way to do this.
 
 ### Making a Scene
 
-We can create a Scene for each state we want to show. For example, a Scene showing the empty state might look something like:
+We can create a Scene for each state we want to show. For example, a Scene showing the PostsListPage's empty state might look something like:
 
 <?code-excerpt "pages/posts_list/posts_list_page_scenes.dart (PostsListPageScene)"?>
 ```dart
