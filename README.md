@@ -28,14 +28,14 @@ flutter pub get
 
 You can then run the indivdual Stager apps with the following commands:
 
-**User Detail**
-```bash
-flutter run -t lib/pages/user_detail/user_detail_page_scenes.stager_app.g.dart
-```
-
 **Posts List**
 ```bash
 flutter run -t lib/pages/posts_list/posts_list_page_scenes.stager_app.g.dart
+```
+
+**User Detail**
+```bash
+flutter run -t lib/pages/user_detail/user_detail_page_scenes.stager_app.g.dart
 ```
 
 **Post Detail**
