@@ -51,7 +51,7 @@ To get an idea of how these Scenes fit together, you can also run the main app b
 
 A Scene is a simple, self-contained unit of UI, and is the most important idea in Stager. Scenes make it easy to focus on a single widget or page to greatly increase development velocity by isolating them from the rest of your app and allowing fine control of dependencies.
 
-To create your own Scene, simply create a `Scene` subclass and implement `title`, the name of your Scene, and `build()`, which constructs the widget you wish to develop or preview.
+To create your own Scene, simply create a `Scene` subclass and implement `title`, the name of your Scene, and `build()`, which constructs body of the Scene.
 
 You can also override the following methods and properties:
 
