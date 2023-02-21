@@ -287,11 +287,11 @@ class CounterScene extends Scene {
   @override
   List<EnvironmentControlBuilder> get environmentControlBuilders => [
         (BuildContext context, VoidCallback rebuildScene) {
-          // NumberStepperControl is a widget provided by Stager for convenience.
+          // StepperControl is a widget provided by Stager for convenience.
           // However, your EnvironmentControlBuilder can return any arbitrary widget.
-          return NumberStepperControl(
+          return StepperControl(
             title: const Text('Count'),
-            value: count,
+            value: count.toString(),
             onDecrementPressed: () {
               count -= 1;
 
