@@ -2,10 +2,10 @@
 
 # Stager
 
-Stager is a Flutter development tool that allows you to run small portions of your app as individual Flutter apps. This lets you:
+Stager is a Flutter development tool that allows you to run small portions of your app as independent Flutter apps. This lets you:
 
 - Focus your development on a single widget or flow – no more clicking through multiple screens or setting external feature flags to reach the page you're working on.
-- Ensure your UI works in *all* cases, including:
+- Ensure your UI works in wide number of cases, including:
   - Light and Dark mode
   - Small or large text sizes
   - Different viewport sizes
@@ -26,6 +26,8 @@ cd example
 flutter pub get
 ```
 
+NOTE: The Stager `main` files for the example have already been generated. To generate a Stager `main` file from files containins Scenes, run `flutter run build_runner` from your app's home folder.
+
 You can then run the indivdual Stager apps with the following commands:
 
 **Posts List**
@@ -43,13 +45,13 @@ flutter run -t lib/pages/user_detail/user_detail_page_scenes.stager_app.g.dart
 flutter run -t lib/pages/post_detail/post_detail_page_scenes.stager_app.g.dart
 ```
 
-To get an idea of how these Scenes fit together, you can also run the main app by executing `flutter run` from the `example` directory.
+To get an idea of how these Scenes fit together, you can also run the main app by executing `flutter run` from the `example` directory, which runs the default `main.dart`.
 
 ## Concepts
 
 ### Scene
 
-A Scene is a simple, self-contained unit of UI, and is the most important idea in Stager. Scenes make it easy to focus on a single widget or page to greatly increase development velocity by isolating them from the rest of your app and allowing fine control of dependencies.
+A Scene is a simple, self-contained unit of UI, and is the most important idea in Stager. Scenes make it easy to focus on a single widget or page to greatly increase development velocity by isolating it from the rest of your app. This isolation makes it much easier to provide your UI with a wide variety of inputs and to swap out dependencies with mocks or alternate implementations.
 
 To create your own Scene, simply create a `Scene` subclass and implement `title`, the name of your Scene, and `build()`, which constructs body of the Scene.
 
@@ -61,17 +63,25 @@ A function that is called once before the Scene is displayed. This will generall
 
 #### `environmentControlBuilders`
 
-An optional list of `WidgetBuilder`-like functions that allow you to add custom Widgets to the Stager control panel. These are useful if you want to manipulate things specific to your app, including:
+An optional list of `EnvironmentControlBuilder`s that allow you to add custom widgets to the Stager control panel. `EnvironmentControlBuilder` is a function similar to a `WidgetBuilder` – it accepts a `BuildContext` as a parameter and returns a `Widget`. It also accepts an additional `rebuildScene` callback that you can use to tell Stager to reconstruct your Scene.
 
-- Data displayed by your Widget
+Stager calls these functions when constructing a Scene and places the widgets they return in the environment control panel.
+
+These are useful if you want to manipulate things specific to your app, including:
+
+- Data displayed by your widget
 - Properties on mocked dependenices
 - Feature flags
 
-You can return any arbitrary Widget from these functions.
+Widgets placed in the environment control panel typically have callbacks that update an environment value or values (a parameter to a widget in your Scene or the behavior of a dependency) and then call `rebuildScene`, which reconstructs the Scene to reflect the changes.
+
+You can return any arbitrary widget from these functions.
 
 ### StagerApp
 
 A StagerApp displays a list of Scenes, allow the user to select from all available Scenes. Because Scenes can contain their own Navigators, the StagerApp overlays a back button on top of the Scenes.
+
+You will generally not need to interact with this class directly – Stager will generate this for you. Once you've written your Scene classes, simply run `flutter run build_runner` from your project root to generate a file containing a `main()` entrypoint that creates a StagerApp with your Scenes.
 
 ## Use
 
@@ -249,7 +259,7 @@ flutter run -t path/to/my_scenes.stager_app.g.dart --dart-define='Scene=No Posts
 
 ### Adding your own environment controls
 
-Stager's control panel comes with a generally useful set of controls that enable you to toggle dark mode, adjust text scale, etc. However, it is very likely that your app has unique environment properties that would be useful to adjust. To support this, Scenes have an overridable `environmentControlBuilders` property which allows you to add custom widgets to the default set of environment manipulation controls.
+Stager's control panel comes with a generally useful set of controls that enable you to toggle dark mode, adjust text scale, etc. However, it is very likely that your app has unique environment properties that would be useful to adjust at runtime. To support this, Scenes have an overridable `environmentControlBuilders` property which allows you to add custom widgets to the default set of environment manipulation controls.
 
 A very simple example:
 
