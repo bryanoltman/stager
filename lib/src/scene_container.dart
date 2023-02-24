@@ -46,6 +46,19 @@ class _SceneContainerState extends State<SceneContainer> {
     setState(() => _containerKey = UniqueKey());
   }
 
+  void _resetScene() {
+    setState(() {
+      _textScale = 1;
+      _isDarkMode = false;
+      _isTextBold = false;
+      _showSemantics = false;
+      _targetPlatform = null;
+      _heightOverride = null;
+      _widthOverride = null;
+      widget.scene.onEnvironmentReset();
+    });
+  }
+
   double get _panelWidth => min(MediaQuery.of(context).size.width * 0.75, 300);
   bool get isSmallScreen => MediaQuery.of(context).size.width < 600;
 
@@ -165,6 +178,13 @@ class _SceneContainerState extends State<SceneContainer> {
               .map((EnvironmentControlBuilder builder) {
             return builder(context, _rebuildScene);
           }),
+          const SizedBox(height: 10),
+          Center(
+            child: ElevatedButton(
+              onPressed: _resetScene,
+              child: const Text('Reset'),
+            ),
+          ),
         ],
       ),
     );
