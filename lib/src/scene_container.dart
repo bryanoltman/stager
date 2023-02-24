@@ -29,6 +29,7 @@ class SceneContainer extends StatefulWidget {
 
 class _SceneContainerState extends State<SceneContainer> {
   static const Duration _panelAnimationDuration = Duration(milliseconds: 250);
+  static const double _panelDividerWidth = 1;
 
   Key _containerKey = UniqueKey();
   bool _isControlPanelExpanded = false;
@@ -45,41 +46,31 @@ class _SceneContainerState extends State<SceneContainer> {
     setState(() => _containerKey = UniqueKey());
   }
 
-  double get panelWidth => min(MediaQuery.of(context).size.width * 0.75, 300);
+  double get _panelWidth => min(MediaQuery.of(context).size.width * 0.75, 300);
   bool get isSmallScreen => MediaQuery.of(context).size.width < 600;
-  static const double _panelDividerWidth = 1;
 
   Size get _defaultSceneSize {
     final Size viewportSize = MediaQuery.of(context).size;
     return isSmallScreen
         ? viewportSize
         : Size(
-            viewportSize.width - panelWidth - _panelDividerWidth,
+            viewportSize.width - _panelWidth - _panelDividerWidth,
             viewportSize.height,
           );
   }
 
-  double get sceneHeight {
+  double get _sceneHeight {
     return _heightOverride?.toDouble() ?? MediaQuery.of(context).size.height;
   }
 
-  double get sceneWidth {
-    if (_widthOverride == null) {
-      return MediaQuery.of(context).size.width -
-          panelWidth -
-          _panelDividerWidth;
-    }
-
-    // if (isSmallScreen) {
-    return _widthOverride!.toDouble();
-    // }
-
-    // return MediaQuery.of(context).size.width - panelWidth - _panelDividerWidth;
+  double get _sceneWidth {
+    return _widthOverride?.toDouble() ??
+        MediaQuery.of(context).size.width - _panelWidth - _panelDividerWidth;
   }
 
   Widget _panel() {
     return SizedBox(
-      width: panelWidth,
+      width: _panelWidth,
       child: EnvironmentControlPanel(
         targetPlatform: _targetPlatform,
         children: <Widget>[
@@ -182,8 +173,8 @@ class _SceneContainerState extends State<SceneContainer> {
         data: Theme.of(context).copyWith(platform: _targetPlatform),
         child: SizedBox(
           key: _containerKey,
-          width: sceneWidth,
-          height: sceneHeight,
+          width: _sceneWidth,
+          height: _sceneHeight,
           child: ClipRect(
             child: _showSemantics
                 ? SemanticsDebugger(child: widget.scene.build())
@@ -194,7 +185,9 @@ class _SceneContainerState extends State<SceneContainer> {
     );
   }
 
-  Widget _smallScreenContainer() {
+  /// A layout for narrower screens that makes the [EnvironmentControlPanel]
+  /// collapsible.
+  Widget _smallScreenLayout() {
     return Stack(
       alignment: Alignment.center,
       children: <Widget>[
@@ -203,7 +196,7 @@ class _SceneContainerState extends State<SceneContainer> {
           padding: EdgeInsets.zero,
           alignment: Alignment.centerLeft,
           transform: Matrix4.translationValues(
-            _isControlPanelExpanded ? 0 : -panelWidth,
+            _isControlPanelExpanded ? 0 : -_panelWidth,
             0,
             0,
           ),
@@ -239,7 +232,9 @@ class _SceneContainerState extends State<SceneContainer> {
     );
   }
 
-  Widget _largeScreenContainer() {
+  /// A master-detail layout that makes the [EnvironmentControlPanel]
+  /// non-collapsible.
+  Widget _largeScreenLayout() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -260,7 +255,7 @@ class _SceneContainerState extends State<SceneContainer> {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.black,
-      child: isSmallScreen ? _smallScreenContainer() : _largeScreenContainer(),
+      child: isSmallScreen ? _smallScreenLayout() : _largeScreenLayout(),
     );
   }
 }
