@@ -11,8 +11,13 @@ class DisplaySizePicker extends StatefulWidget {
   /// several [ScreenSizePreset]s or manually enter width and height values.
   const DisplaySizePicker({
     super.key,
+    required this.defaultSize,
     required this.didChangeSize,
   });
+
+  /// The initial value of this control. This value is also used when no size
+  /// preset is selected.
+  final Size defaultSize;
 
   /// Called when the width or height values are updated, either by text input
   /// or by the user selecting one of the [ScreenSizePreset]s.
@@ -45,7 +50,7 @@ class _DisplaySizePickerState extends State<DisplaySizePicker> {
     _widthTextEditingController = TextEditingController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final Size screenSize = MediaQuery.of(context).size;
+      final Size screenSize = widget.defaultSize;
       setState(() {
         _heightTextEditingController.text =
             screenSize.height.toStringAsFixed(0);
@@ -126,8 +131,7 @@ class _DisplaySizePickerState extends State<DisplaySizePicker> {
                 value: _selectedScreenSizePreset,
                 onChanged: (ScreenSizePreset? newValue) {
                   _selectedScreenSizePreset = newValue;
-                  final Size newSize =
-                      newValue?.size ?? MediaQuery.of(context).size;
+                  final Size newSize = newValue?.size ?? widget.defaultSize;
                   _heightTextEditingController.text =
                       newSize.height.toStringAsFixed(0);
                   _widthTextEditingController.text =
