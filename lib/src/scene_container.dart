@@ -64,8 +64,17 @@ class _SceneContainerState extends State<SceneContainer> {
   }
 
   double get _sceneWidth {
-    return _widthOverride?.toDouble() ??
-        MediaQuery.of(context).size.width - _panelWidth - _panelDividerWidth;
+    if (_widthOverride != null) {
+      return _widthOverride!.toDouble();
+    }
+
+    final double screenWidth = MediaQuery.of(context).size.width;
+
+    if (isSmallScreen) {
+      return screenWidth;
+    }
+
+    return screenWidth - _panelWidth - _panelDividerWidth;
   }
 
   Widget _panel() {

@@ -56,14 +56,14 @@ class _DisplaySizePickerState extends State<DisplaySizePicker> {
             screenSize.height.toStringAsFixed(0);
         _widthTextEditingController.text = screenSize.width.toStringAsFixed(0);
       });
-    });
 
-    _heightTextEditingController.addListener(
-      () => widget.didChangeSize(width, height),
-    );
-    _widthTextEditingController.addListener(
-      () => widget.didChangeSize(width, height),
-    );
+      _heightTextEditingController.addListener(
+        () => widget.didChangeSize(width, height),
+      );
+      _widthTextEditingController.addListener(
+        () => widget.didChangeSize(width, height),
+      );
+    });
   }
 
   @override
