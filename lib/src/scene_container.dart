@@ -56,6 +56,7 @@ class _SceneContainerState extends State<SceneContainer> {
       _heightOverride = null;
       _widthOverride = null;
       widget.scene.onEnvironmentReset();
+      _rebuildScene();
     });
   }
 
