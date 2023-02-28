@@ -84,12 +84,6 @@ class WithPostsScene extends BasePostsListScene {
         },
       ];
 
-  // @override
-  // void onEnvironmentReset() {
-  //   super.onEnvironmentReset();
-  //   _numPosts = Post.fakePosts().length;
-  // }
-
   @override
   Future<void> setUp(EnvironmentState environmentState) async {
     await super.setUp(environmentState);
