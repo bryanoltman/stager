@@ -50,18 +50,14 @@ class PostsListScene extends Scene {
   @override
   Widget build(BuildContext context) {
     return EnvironmentAwareApp(
-      // TODO: verify that this Builder is still necessary now that we're
-      //passing context as an arg
-      home: Builder(
-        builder: (BuildContext context) => Container(
-          color: Theme.of(context).colorScheme.background,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: ListView.builder(
-            itemCount: posts.length,
-            itemBuilder: (BuildContext context, int index) => PostCard(
-              post: posts[index],
-              onTap: () {},
-            ),
+      home: Container(
+        color: Theme.of(context).colorScheme.background,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: ListView.builder(
+          itemCount: posts.length,
+          itemBuilder: (BuildContext context, int index) => PostCard(
+            post: posts[index],
+            onTap: () {},
           ),
         ),
       ),
