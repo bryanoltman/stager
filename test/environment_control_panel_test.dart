@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:stager/src/control_panel/environment_control_panel.dart';
+import 'package:stager/src/environment/environment_control_panel.dart';
 import 'package:stager/stager.dart';
 
 void main() {
@@ -257,7 +257,7 @@ class EnvironmentControlScene extends Scene {
       ValueKey<String>('EnvironmentControlButton');
 
   @override
-  Widget build() => const Text(
+  Widget build(BuildContext context) => const Text(
         'My Scene',
         key: EnvironmentControlScene.sceneKey,
       );

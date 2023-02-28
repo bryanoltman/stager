@@ -9,6 +9,7 @@ import 'package:stager/stager.dart';
 
 import '../../shared/api.dart';
 import '../../shared/post.dart';
+import '../user_detail/user_detail_page_scenes.dart';
 import 'posts_list_page.dart';
 
 // #docregion PostsListPageScene
@@ -23,7 +24,7 @@ abstract class BasePostsListScene extends Scene {
   late MockApi mockApi;
 
   @override
-  Widget build() {
+  Widget build(BuildContext context) {
     return EnvironmentAwareApp(
       home: Provider<Api>.value(
         value: mockApi,
@@ -33,7 +34,8 @@ abstract class BasePostsListScene extends Scene {
   }
 
   @override
-  Future<void> setUp() async {
+  Future<void> setUp(EnvironmentState environmentState) async {
+    environmentState.set(key: numPostsKey, value: Post.fakePosts().length);
     mockApi = MockApi();
   }
 }
@@ -44,8 +46,8 @@ class EmptyListScene extends BasePostsListScene {
   String get title => 'Empty List';
 
   @override
-  Future<void> setUp() async {
-    await super.setUp();
+  Future<void> setUp(EnvironmentState environmentState) async {
+    await super.setUp(environmentState);
     when(mockApi.fetchPosts()).thenAnswer((_) async => <Post>[]);
   }
 }
@@ -53,41 +55,48 @@ class EmptyListScene extends BasePostsListScene {
 
 /// A Scene showing the [PostsListPage] with [Post]s.
 class WithPostsScene extends BasePostsListScene {
-  int _numPosts = Post.fakePosts().length;
-
   @override
   String get title => 'With Posts';
 
   @override
   List<EnvironmentControlBuilder> get environmentControlBuilders =>
       <EnvironmentControlBuilder>[
-        (_, VoidCallback rebuildScene) {
+        (_, EnvironmentState environmentState) {
           return StepperControl(
             title: const Text('# Posts'),
-            value: _numPosts.toString(),
+            value: environmentState.get(key: numPostsKey).toString(),
             onDecrementPressed: () async {
-              _numPosts = max(0, _numPosts - 1);
-              rebuildScene();
+              environmentState.set(
+                key: numPostsKey,
+                value:
+                    max(0, (environmentState.get(key: numPostsKey) as int) - 1),
+              );
+              // rebuildScene();
             },
             onIncrementPressed: () async {
-              _numPosts = min(_numPosts + 1, Post.fakePosts().length);
-              rebuildScene();
+              environmentState.set(
+                key: numPostsKey,
+                value: min((environmentState.get(key: numPostsKey) as int) + 1,
+                    Post.fakePosts().length),
+              );
             },
           );
         },
       ];
 
-  @override
-  void onEnvironmentReset() {
-    super.onEnvironmentReset();
-    _numPosts = Post.fakePosts().length;
-  }
+  // @override
+  // void onEnvironmentReset() {
+  //   super.onEnvironmentReset();
+  //   _numPosts = Post.fakePosts().length;
+  // }
 
   @override
-  Future<void> setUp() async {
-    await super.setUp();
+  Future<void> setUp(EnvironmentState environmentState) async {
+    await super.setUp(environmentState);
     when(mockApi.fetchPosts()).thenAnswer((_) async {
-      return Post.fakePosts().take(_numPosts).toList();
+      return Post.fakePosts()
+          .take(environmentState.get(key: numPostsKey))
+          .toList();
     });
   }
 }
@@ -98,8 +107,8 @@ class LoadingScene extends BasePostsListScene {
   String get title => 'Loading';
 
   @override
-  Future<void> setUp() async {
-    await super.setUp();
+  Future<void> setUp(EnvironmentState environmentState) async {
+    await super.setUp(environmentState);
     final Completer<List<Post>> completer = Completer<List<Post>>();
     when(mockApi.fetchPosts()).thenAnswer((_) async => completer.future);
   }
@@ -111,8 +120,8 @@ class ErrorScene extends BasePostsListScene {
   String get title => 'Error';
 
   @override
-  Future<void> setUp() async {
-    await super.setUp();
+  Future<void> setUp(EnvironmentState environmentState) async {
+    await super.setUp(environmentState);
     when(mockApi.fetchPosts()).thenAnswer(
       (_) => Future<List<Post>>.error(Exception()),
     );

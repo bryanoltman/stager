@@ -1,12 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'control_panel/boolean_control.dart';
-import 'control_panel/display_size_picker.dart';
-import 'control_panel/dropdown_control.dart';
-import 'control_panel/environment_control_panel.dart';
-import 'control_panel/stepper_control.dart';
+import 'environment/controls/boolean_control.dart';
+import 'environment/controls/display_size_picker.dart';
+import 'environment/controls/dropdown_control.dart';
+import 'environment/controls/stepper_control.dart';
+import 'environment/environment_control_panel.dart';
+import 'environment/state/basic_environment_state.dart';
+import 'environment/state/environment_state.dart';
 import 'scene.dart';
 
 /// Wraps [child] in a MediaQuery whose properties (such as textScale and
@@ -32,30 +35,51 @@ class _SceneContainerState extends State<SceneContainer> {
   static const double _panelDividerWidth = 1;
 
   Key _containerKey = UniqueKey();
+
+  // TODO: move these to EnvironmentState
   bool _isControlPanelExpanded = false;
   double _textScale = 1;
   bool _isDarkMode = false;
-  bool _isTextBold = false;
   bool _showSemantics = false;
   TargetPlatform? _targetPlatform;
   num? _heightOverride;
   num? _widthOverride;
 
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<EnvironmentState>().addListener(_rebuildScene);
+  }
+
+  @override
+  void dispose() {
+    if (context.mounted) {
+      context.read<EnvironmentState>().removeListener(_rebuildScene);
+    }
+    super.dispose();
+  }
+
   void _rebuildScene() {
+    if (!mounted) {
+      return;
+    }
+
     // Create a new UniqueKey to force recreation of StatefulWidgets' states.
     setState(() => _containerKey = UniqueKey());
   }
 
   void _resetScene() {
     setState(() {
+      // environmentState.basicState = BasicEnvironmentState.defaultState;
       _textScale = 1;
       _isDarkMode = false;
-      _isTextBold = false;
       _showSemantics = false;
       _targetPlatform = null;
       _heightOverride = null;
       _widthOverride = null;
       widget.scene.onEnvironmentReset();
+      context.read<EnvironmentState>().reset();
       _rebuildScene();
     });
   }
@@ -92,6 +116,8 @@ class _SceneContainerState extends State<SceneContainer> {
   }
 
   Widget _panel() {
+    final EnvironmentState environmentState = context.read<EnvironmentState>();
+
     return SizedBox(
       width: _panelWidth,
       child: EnvironmentControlPanel(
@@ -120,10 +146,16 @@ class _SceneContainerState extends State<SceneContainer> {
               'ToggleBoldTextControl',
             ),
             title: const Text('Bold Text'),
-            isOn: _isTextBold,
+            isOn: environmentState.basicState.isTextBold,
             onChanged: (bool newValue) {
               setState(() {
-                _isTextBold = newValue;
+                final EnvironmentState container =
+                    context.read<EnvironmentState>();
+                container.basicState = container.basicState
+                    .rebuild((BasicEnvironmentStateBuilder builder) {
+                  builder.isTextBold = newValue;
+                  return builder.build();
+                });
               });
             },
           ),
@@ -177,7 +209,7 @@ class _SceneContainerState extends State<SceneContainer> {
           ),
           ...widget.scene.environmentControlBuilders
               .map((EnvironmentControlBuilder builder) {
-            return builder(context, _rebuildScene);
+            return builder(context, environmentState);
           }),
           const SizedBox(height: 10),
           Center(
@@ -192,10 +224,11 @@ class _SceneContainerState extends State<SceneContainer> {
   }
 
   Widget _sceneWrapper() {
+    final EnvironmentState environmentState = context.read<EnvironmentState>();
     return MediaQuery(
       key: const ValueKey<String>('SceneContainerMediaQuery'),
       data: MediaQuery.of(context).copyWith(
-        boldText: _isTextBold,
+        boldText: environmentState.basicState.isTextBold,
         textScaleFactor: _textScale,
         platformBrightness: _isDarkMode ? Brightness.dark : Brightness.light,
       ),
@@ -207,8 +240,8 @@ class _SceneContainerState extends State<SceneContainer> {
           height: _sceneHeight,
           child: ClipRect(
             child: _showSemantics
-                ? SemanticsDebugger(child: widget.scene.build())
-                : widget.scene.build(),
+                ? SemanticsDebugger(child: widget.scene.build(context))
+                : widget.scene.build(context),
           ),
         ),
       ),

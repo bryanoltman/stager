@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'environment/state/environment_state.dart';
 import 'scene.dart';
 import 'scene_container.dart';
 import 'scene_list.dart';
@@ -28,11 +30,13 @@ class _StagerAppState extends State<StagerApp> {
 
   bool get _isSingleScene => widget.scenes.length == 1;
 
+  final EnvironmentState _environmentState = EnvironmentState();
+
   @override
   void initState() {
     super.initState();
     if (_isSingleScene) {
-      _sceneSetUpFuture = widget.scenes.first.setUp();
+      _sceneSetUpFuture = widget.scenes.first.setUp(_environmentState);
     } else {
       _sceneSetUpFuture = Future<void>.value();
     }
@@ -49,10 +53,13 @@ class _StagerAppState extends State<StagerApp> {
           );
         }
 
-        return MaterialApp(
-          home: _isSingleScene
-              ? SceneContainer(scene: widget.scenes.first)
-              : SceneList(scenes: widget.scenes),
+        return ChangeNotifierProvider<EnvironmentState>.value(
+          value: _environmentState,
+          child: MaterialApp(
+            home: _isSingleScene
+                ? SceneContainer(scene: widget.scenes.first)
+                : SceneList(scenes: widget.scenes),
+          ),
         );
       },
     );

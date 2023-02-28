@@ -11,7 +11,7 @@ class PostCardScene extends Scene {
   String get title => 'Single Card';
 
   @override
-  Widget build() {
+  Widget build(BuildContext context) {
     return PostCard(
       post: Post.fakePosts().first,
       onTap: () {},
@@ -48,8 +48,10 @@ class PostsListScene extends Scene {
   String get title => 'Card List';
 
   @override
-  Widget build() {
+  Widget build(BuildContext context) {
     return EnvironmentAwareApp(
+      // TODO: verify that this Builder is still necessary now that we're
+      //passing context as an arg
       home: Builder(
         builder: (BuildContext context) => Container(
           color: Theme.of(context).colorScheme.background,

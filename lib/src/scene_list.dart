@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'environment/state/environment_state.dart';
 import 'scene.dart';
 import 'scene_container.dart';
 
@@ -19,6 +21,8 @@ class SceneList extends StatefulWidget {
 class _SceneListState extends State<SceneList> {
   @override
   Widget build(BuildContext context) {
+    final EnvironmentState state = context.read<EnvironmentState>();
+
     return Scaffold(
       appBar: AppBar(title: const Text('Scenes')),
       body: ListView.separated(
@@ -27,7 +31,7 @@ class _SceneListState extends State<SceneList> {
           return ListTile(
             title: Text(widget.scenes[index].title),
             onTap: () async {
-              await scene.setUp();
+              await scene.setUp(state);
               if (!mounted) {
                 return;
               }

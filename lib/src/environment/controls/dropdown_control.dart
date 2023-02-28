@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'environment_control_panel.dart';
+import '../environment_control_panel.dart';
 
 /// An [EnvironmentControlPanel] widget that allows the user to choose from one
 /// of several options.

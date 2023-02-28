@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../extensions/string_extensions.dart';
-import 'environment_control_panel.dart';
+import '../../extensions/string_extensions.dart';
+import '../environment_control_panel.dart';
 
 /// Allows the user to input custom screen dimensions or to select from a list
 /// of popular device presets.

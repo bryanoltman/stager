@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stager/stager.dart';
 
 import '../../shared/post.dart';
@@ -6,8 +7,16 @@ import 'post_detail_page.dart';
 
 /// A scene demonstrating a [PostDetailPage] with content.
 class PostDetailPageScene extends Scene {
-  /// The post being previewed.
-  Post currentPost = Post.fakePosts().first;
+  static const String _currentPostKey = 'currentPost';
+
+  @override
+  Future<void> setUp(EnvironmentState environmentState) async {
+    super.setUp(environmentState);
+    environmentState.setDefault(
+      key: _currentPostKey,
+      value: Post.fakePosts().first,
+    );
+  }
 
   @override
   String get title => 'Post Detail';
@@ -17,9 +26,9 @@ class PostDetailPageScene extends Scene {
   @override
   List<EnvironmentControlBuilder> get environmentControlBuilders =>
       <EnvironmentControlBuilder>[
-        (_, VoidCallback rebuildScene) {
+        (_, EnvironmentState state) {
           return DropdownControl<Post>(
-              value: currentPost,
+              value: state.get<Post>(key: _currentPostKey)!,
               title: const Text('Post'),
               items: Post.fakePosts(),
               onChanged: (Post? newPost) {
@@ -27,25 +36,16 @@ class PostDetailPageScene extends Scene {
                   return;
                 }
 
-                // When a new [Post] is chosen, call [rebuildScene()] to update
-                // the UI with the newly chosen post.
-                currentPost = newPost;
-                rebuildScene();
+                state.set(key: _currentPostKey, value: newPost);
               });
         },
       ];
 
   @override
-  void onEnvironmentReset() {
-    super.onEnvironmentReset();
-    currentPost = Post.fakePosts().first;
-  }
-
-  @override
-  Widget build() {
+  Widget build(BuildContext context) {
     return EnvironmentAwareApp(
       home: PostDetailPage(
-        post: currentPost,
+        post: context.read<EnvironmentState>().get<Post>(key: _currentPostKey)!,
       ),
     );
   }

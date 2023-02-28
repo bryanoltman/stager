@@ -1,10 +1,13 @@
 import 'package:flutter/widgets.dart';
 
+import 'environment/state/environment_state.dart';
+
 /// Signature for a function that creates a widget and provides a hook to
 /// trigger a rebuild of the current [Scene].
 typedef EnvironmentControlBuilder = Widget Function(
   BuildContext context,
-  VoidCallback rebuildScene,
+  EnvironmentState environmentState,
+  // VoidCallback rebuildScene,
 );
 
 /// The central class of Stager, used to demonstrate a single piece of UI.
@@ -72,12 +75,21 @@ abstract class Scene {
   ///
   /// Analogous to StatefulWidget's `initState`, this is called once at app
   /// launch.
-  Future<void> setUp() async {}
+  ///
+  /// Use [environmentState] to provide custom values to your UI. You will
+  /// likely set the value here using [EnvironmentState.setDefault], update
+  /// the value in one of your [environmentControlBuilders], and consume the
+  /// value in [build] using `context.read<EnvironmentState>().get`.
+  Future<void> setUp(EnvironmentState environmentState) async {}
 
   /// Creates the widget tree for this Scene.
   ///
   /// This is called on every rebuild, including by Hot Reload.
-  Widget build();
+  ///
+  /// [EnvironmentState] is available through [context] using
+  /// `context.read<EnvironmentState>()`. Get specific values using
+  /// `context.read<EnvironmentState>().get(key: myKey)`.
+  Widget build(BuildContext context);
 
   /// Used to add custom controls to the [EnvironmentControlPanel].
   ///
@@ -137,5 +149,7 @@ abstract class Scene {
   /// Override this function to reset any state controlled by the Scene's
   /// [environmentControlBuilders]. After this function is executed, this Scene
   /// will be rebuilt.
+  ///
+  /// TODO: is this still needed?
   void onEnvironmentReset() {}
 }

@@ -46,7 +46,7 @@ class TextScene extends Scene {
   String get title => 'Text';
 
   @override
-  Widget build() => const Text('Text Scene');
+  Widget build(BuildContext context) => const Text('Text Scene');
 }
 
 class ButtonScene extends Scene {
@@ -54,7 +54,7 @@ class ButtonScene extends Scene {
   String get title => 'Button';
 
   @override
-  Widget build() => ElevatedButton(
+  Widget build(BuildContext context) => ElevatedButton(
         onPressed: () {},
         child: const Text('My Button'),
       );

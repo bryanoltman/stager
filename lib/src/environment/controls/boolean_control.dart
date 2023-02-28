@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'environment_control_panel.dart';
+import '../environment_control_panel.dart';
 
 /// An [EnvironmentControlPanel] widget that allows a user to toggle an
 /// arbitrary environment value.
