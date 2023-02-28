@@ -25,8 +25,9 @@ class EnvironmentState extends ChangeNotifier {
   /// Sets a default
   void setDefault({required String key, required dynamic value}) {
     _stateMapDefaults[key] = value;
+
     if (!_stateMap.containsKey(key)) {
-      _stateMap[key] = value;
+      set(key: key, value: value);
     }
   }
 
