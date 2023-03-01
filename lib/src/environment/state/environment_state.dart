@@ -63,7 +63,7 @@ class EnvironmentState extends ChangeNotifier {
     _stateMapDefaults[key] = value;
 
     if (!_stateMap.containsKey(key)) {
-      set(key, value);
+      _stateMap[key] = value;
     }
   }
 

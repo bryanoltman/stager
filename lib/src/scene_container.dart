@@ -41,7 +41,14 @@ class _SceneContainerState extends State<SceneContainer> {
   void initState() {
     super.initState();
 
-    context.read<EnvironmentState>().addListener(_rebuildScene);
+    final EnvironmentState environmentState = context.read<EnvironmentState>();
+
+    for (final EnvironmentControl<dynamic> control
+        in widget.scene.environmentControls) {
+      environmentState.setDefault(control.stateKey, control.defaultValue);
+    }
+
+    environmentState.addListener(_rebuildScene);
   }
 
   @override
@@ -197,9 +204,9 @@ class _SceneContainerState extends State<SceneContainer> {
                 Theme.of(context).platform,
             itemTitleBuilder: (TargetPlatform platform) => platform.name,
           ),
-          ...widget.scene.environmentControlBuilders
-              .map((EnvironmentControlBuilder builder) {
-            return builder(context, environmentState);
+          ...widget.scene.environmentControls
+              .map((EnvironmentControl<dynamic> control) {
+            return control.builder(context, environmentState);
           }),
           const SizedBox(height: 10),
           Center(

@@ -266,12 +266,16 @@ class EnvironmentControlScene extends Scene {
   String get title => 'My Scene';
 
   @override
-  List<EnvironmentControlBuilder> get environmentControlBuilders =>
-      <EnvironmentControlBuilder>[
-        (_, __) => ElevatedButton(
-              key: environmentControlKey,
-              onPressed: () {},
-              child: const Text('Click me'),
-            ),
+  List<EnvironmentControl<dynamic>> get environmentControls =>
+      <EnvironmentControl<dynamic>>[
+        EnvironmentControl<int?>(
+          stateKey: '',
+          defaultValue: null,
+          builder: (_, __) => ElevatedButton(
+            key: environmentControlKey,
+            onPressed: () {},
+            child: const Text('Click me'),
+          ),
+        ),
       ];
 }
