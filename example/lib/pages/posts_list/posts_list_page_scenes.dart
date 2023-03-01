@@ -78,8 +78,10 @@ class WithPostsScene extends BasePostsListScene {
             onIncrementPressed: () async {
               environmentState.set(
                 numPostsKey,
-                min((environmentState.get(numPostsKey) as int) + 1,
-                    Post.fakePosts().length),
+                min(
+                  (environmentState.get(numPostsKey) as int) + 1,
+                  Post.fakePosts().length,
+                ),
               );
             },
           );
