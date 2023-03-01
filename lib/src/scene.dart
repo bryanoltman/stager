@@ -7,8 +7,21 @@ import 'environment/state/environment_state.dart';
 typedef EnvironmentControlBuilder = Widget Function(
   BuildContext context,
   EnvironmentState environmentState,
-  // VoidCallback rebuildScene,
 );
+
+class EnvironmentControl<T> {
+  EnvironmentControl({
+    required this.stateKey,
+    required this.defaultValue,
+    required this.builder,
+  });
+
+  final String stateKey;
+
+  final T defaultValue;
+
+  final EnvironmentControlBuilder builder;
+}
 
 /// The central class of Stager, used to demonstrate a single piece of UI.
 ///
@@ -142,6 +155,6 @@ abstract class Scene {
   /// To make effective use of this functionality, these widgets should
   /// mutate a property defined on this Scene in the various onChange callbacks
   /// **and call [rebuildScene()] afterwards.**
-  List<EnvironmentControlBuilder> environmentControlBuilders =
-      <EnvironmentControlBuilder>[];
+  List<EnvironmentControl<dynamic>> environmentControls =
+      <EnvironmentControl<dynamic>>[];
 }

@@ -28,7 +28,6 @@ abstract class UserDetailPageScene extends Scene {
   @override
   Future<void> setUp(EnvironmentState environmentState) async {
     await super.setUp(environmentState);
-    environmentState.setDefault(numPostsKey, 20);
     mockApi = MockApi();
   }
 
@@ -91,24 +90,28 @@ class EmptyUserDetailPageScene extends UserDetailPageScene {
 /// A Scene showing the content state of the [UserDetailPage].
 class WithPostsUserDetailPageScene extends UserDetailPageScene {
   @override
-  List<EnvironmentControlBuilder> get environmentControlBuilders =>
-      <EnvironmentControlBuilder>[
-        (_, EnvironmentState state) => StepperControl(
-              title: const Text('Post Count'),
-              value: state.get(numPostsKey).toString(),
-              onDecrementPressed: () {
-                state.set(
-                  numPostsKey,
-                  max(0, state.get<int>(numPostsKey)! - 1),
-                );
-              },
-              onIncrementPressed: () {
-                state.set(
-                  numPostsKey,
-                  min(20, state.get<int>(numPostsKey)! + 1),
-                );
-              },
-            )
+  List<EnvironmentControl<dynamic>> get environmentControls =>
+      <EnvironmentControl<dynamic>>[
+        EnvironmentControl<int>(
+          stateKey: numPostsKey,
+          defaultValue: 20,
+          builder: (_, EnvironmentState state) => StepperControl(
+            title: const Text('Post Count'),
+            value: state.get<int>(numPostsKey).toString(),
+            onDecrementPressed: () {
+              state.set(
+                numPostsKey,
+                max(0, state.get<int>(numPostsKey)! - 1),
+              );
+            },
+            onIncrementPressed: () {
+              state.set(
+                numPostsKey,
+                min(20, state.get<int>(numPostsKey)! + 1),
+              );
+            },
+          ),
+        ),
       ];
 
   @override
@@ -128,24 +131,22 @@ class WithPostsUserDetailPageScene extends UserDetailPageScene {
 /// A Scene showing the [UserDetailPage] for a [User] with a long name.
 class ComplexUserDetailPageScene extends UserDetailPageScene {
   @override
-  List<EnvironmentControlBuilder> get environmentControlBuilders =>
-      <EnvironmentControlBuilder>[
-        (_, EnvironmentState state) => StepperControl(
-              title: const Text('Post Count'),
-              value: state.get(numPostsKey).toString(),
-              onDecrementPressed: () {
-                state.set(
-                  numPostsKey,
-                  max(0, state.get<int>(numPostsKey)! - 1),
-                );
-              },
-              onIncrementPressed: () {
-                state.set(
-                  numPostsKey,
-                  min(20, state.get<int>(numPostsKey)! + 1),
-                );
-              },
-            )
+  List<EnvironmentControl<dynamic>> get environmentControls =>
+      <EnvironmentControl<dynamic>>[
+        EnvironmentControl<int>(
+          stateKey: numPostsKey,
+          defaultValue: 20,
+          builder: (_, EnvironmentState state) => StepperControl(
+            title: const Text('Post Count'),
+            value: state.get<int>(numPostsKey).toString(),
+            onDecrementPressed: () {
+              state.set(numPostsKey, max(0, state.get<int>(numPostsKey)! - 1));
+            },
+            onIncrementPressed: () {
+              state.set(numPostsKey, min(20, state.get<int>(numPostsKey)! + 1));
+            },
+          ),
+        ),
       ];
 
   @override

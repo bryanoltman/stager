@@ -10,21 +10,18 @@ class PostDetailPageScene extends Scene {
   static const String _currentPostKey = 'currentPost';
 
   @override
-  Future<void> setUp(EnvironmentState environmentState) async {
-    super.setUp(environmentState);
-    environmentState.setDefault(_currentPostKey, Post.fakePosts().first);
-  }
-
-  @override
   String get title => 'Post Detail';
 
   /// This [Scene] overrides the otional [environmentControlBuilders] getter to
   /// add a custom control to the Stager environment control panel.
   @override
-  List<EnvironmentControlBuilder> get environmentControlBuilders =>
-      <EnvironmentControlBuilder>[
-        (_, EnvironmentState state) {
-          return DropdownControl<Post>(
+  List<EnvironmentControl<dynamic>> get environmentControls =>
+      <EnvironmentControl<dynamic>>[
+        EnvironmentControl<Post>(
+          stateKey: _currentPostKey,
+          defaultValue: Post.fakePosts().first,
+          builder: (_, EnvironmentState state) {
+            return DropdownControl<Post>(
               value: state.get<Post>(_currentPostKey)!,
               title: const Text('Post'),
               items: Post.fakePosts(),
@@ -34,8 +31,10 @@ class PostDetailPageScene extends Scene {
                 }
 
                 state.set(_currentPostKey, newPost);
-              });
-        },
+              },
+            );
+          },
+        ),
       ];
 
   @override

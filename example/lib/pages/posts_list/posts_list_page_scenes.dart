@@ -38,7 +38,6 @@ abstract class BasePostsListScene extends Scene {
 
   @override
   Future<void> setUp(EnvironmentState environmentState) async {
-    environmentState.set(numPostsKey, Post.fakePosts().length);
     mockApi = MockApi();
   }
 }
@@ -62,30 +61,31 @@ class WithPostsScene extends BasePostsListScene {
   String get title => 'With Posts';
 
   @override
-  List<EnvironmentControlBuilder> get environmentControlBuilders =>
-      <EnvironmentControlBuilder>[
-        (_, EnvironmentState environmentState) {
-          return StepperControl(
-            title: const Text('# Posts'),
-            value: environmentState.get(numPostsKey).toString(),
-            onDecrementPressed: () async {
-              environmentState.set(
-                numPostsKey,
-                max(0, environmentState.get<int>(numPostsKey)! - 1),
-              );
-              // rebuildScene();
-            },
-            onIncrementPressed: () async {
-              environmentState.set(
-                numPostsKey,
-                min(
-                  environmentState.get<int>(numPostsKey)! + 1,
-                  Post.fakePosts().length,
-                ),
-              );
-            },
-          );
-        },
+  List<EnvironmentControl<dynamic>> get environmentControls =>
+      <EnvironmentControl<dynamic>>[
+        EnvironmentControl<int>(
+          stateKey: numPostsKey,
+          defaultValue: Post.fakePosts().length,
+          builder: (_, EnvironmentState state) {
+            return StepperControl(
+              title: const Text('# Posts'),
+              value: state.get<int>(numPostsKey).toString(),
+              onDecrementPressed: () async {
+                state.set(
+                  numPostsKey,
+                  max(0, state.get<int>(numPostsKey)! - 1),
+                );
+              },
+              onIncrementPressed: () async {
+                state.set(
+                  numPostsKey,
+                  min(state.get<int>(numPostsKey)! + 1,
+                      Post.fakePosts().length),
+                );
+              },
+            );
+          },
+        ),
       ];
 
   @override
