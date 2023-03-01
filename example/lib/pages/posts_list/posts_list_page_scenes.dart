@@ -66,21 +66,17 @@ class WithPostsScene extends BasePostsListScene {
         EnvironmentControl<int>(
           stateKey: numPostsKey,
           defaultValue: Post.fakePosts().length,
-          builder: (_, EnvironmentState state) {
+          builder: (_, int currentValue, EnvironmentState state) {
             return StepperControl(
               title: const Text('# Posts'),
-              value: state.get<int>(numPostsKey).toString(),
+              value: currentValue.toString(),
               onDecrementPressed: () async {
-                state.set(
-                  numPostsKey,
-                  max(0, state.get<int>(numPostsKey)! - 1),
-                );
+                state.set(numPostsKey, max(0, currentValue - 1));
               },
               onIncrementPressed: () async {
                 state.set(
                   numPostsKey,
-                  min(state.get<int>(numPostsKey)! + 1,
-                      Post.fakePosts().length),
+                  min(currentValue + 1, Post.fakePosts().length),
                 );
               },
             );

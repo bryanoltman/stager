@@ -271,7 +271,7 @@ class EnvironmentControlScene extends Scene {
         EnvironmentControl<int?>(
           stateKey: '',
           defaultValue: null,
-          builder: (_, __) => ElevatedButton(
+          builder: (_, __, ___) => ElevatedButton(
             key: environmentControlKey,
             onPressed: () {},
             child: const Text('Click me'),

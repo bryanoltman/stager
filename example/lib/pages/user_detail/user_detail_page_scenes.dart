@@ -95,20 +95,15 @@ class WithPostsUserDetailPageScene extends UserDetailPageScene {
         EnvironmentControl<int>(
           stateKey: numPostsKey,
           defaultValue: 20,
-          builder: (_, EnvironmentState state) => StepperControl(
+          builder: (_, int currentValue, EnvironmentState state) =>
+              StepperControl(
             title: const Text('Post Count'),
-            value: state.get<int>(numPostsKey).toString(),
+            value: currentValue.toString(),
             onDecrementPressed: () {
-              state.set(
-                numPostsKey,
-                max(0, state.get<int>(numPostsKey)! - 1),
-              );
+              state.set(numPostsKey, max(0, currentValue - 1));
             },
             onIncrementPressed: () {
-              state.set(
-                numPostsKey,
-                min(20, state.get<int>(numPostsKey)! + 1),
-              );
+              state.set(numPostsKey, min(20, currentValue + 1));
             },
           ),
         ),
@@ -136,14 +131,15 @@ class ComplexUserDetailPageScene extends UserDetailPageScene {
         EnvironmentControl<int>(
           stateKey: numPostsKey,
           defaultValue: 20,
-          builder: (_, EnvironmentState state) => StepperControl(
+          builder: (_, int currentValue, EnvironmentState state) =>
+              StepperControl(
             title: const Text('Post Count'),
-            value: state.get<int>(numPostsKey).toString(),
+            value: currentValue.toString(),
             onDecrementPressed: () {
-              state.set(numPostsKey, max(0, state.get<int>(numPostsKey)! - 1));
+              state.set(numPostsKey, max(0, currentValue - 1));
             },
             onIncrementPressed: () {
-              state.set(numPostsKey, min(20, state.get<int>(numPostsKey)! + 1));
+              state.set(numPostsKey, min(20, currentValue + 1));
             },
           ),
         ),
