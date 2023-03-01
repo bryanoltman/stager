@@ -20,9 +20,9 @@ class PostDetailPageScene extends Scene {
         EnvironmentControl<Post>(
           stateKey: _currentPostKey,
           defaultValue: Post.fakePosts().first,
-          builder: (_, EnvironmentState state) {
+          builder: (_, Post post, EnvironmentState state) {
             return DropdownControl<Post>(
-              value: state.get<Post>(_currentPostKey)!,
+              value: post,
               title: const Text('Post'),
               items: Post.fakePosts(),
               onChanged: (Post? newPost) {

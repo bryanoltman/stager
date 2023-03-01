@@ -4,8 +4,9 @@ import 'environment/state/environment_state.dart';
 
 /// Signature for a function that creates a widget and provides a hook to
 /// trigger a rebuild of the current [Scene].
-typedef EnvironmentControlBuilder = Widget Function(
+typedef EnvironmentControlBuilder<T> = Widget Function(
   BuildContext context,
+  T currentValue,
   EnvironmentState environmentState,
 );
 
@@ -20,7 +21,11 @@ class EnvironmentControl<T> {
 
   final T defaultValue;
 
-  final EnvironmentControlBuilder builder;
+  final EnvironmentControlBuilder<T> builder;
+
+  Widget build(BuildContext context, EnvironmentState state) {
+    return builder(context, state.get<T>(stateKey)!, state);
+  }
 }
 
 /// The central class of Stager, used to demonstrate a single piece of UI.

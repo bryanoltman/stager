@@ -206,7 +206,7 @@ class _SceneContainerState extends State<SceneContainer> {
           ),
           ...widget.scene.environmentControls
               .map((EnvironmentControl<dynamic> control) {
-            return control.builder(context, environmentState);
+            return control.build(context, environmentState);
           }),
           const SizedBox(height: 10),
           Center(
