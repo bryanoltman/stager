@@ -35,7 +35,7 @@ abstract class BasePostsListScene extends Scene {
 
   @override
   Future<void> setUp(EnvironmentState environmentState) async {
-    environmentState.set(key: numPostsKey, value: Post.fakePosts().length);
+    environmentState.set(numPostsKey, Post.fakePosts().length);
     mockApi = MockApi();
   }
 }
@@ -64,19 +64,18 @@ class WithPostsScene extends BasePostsListScene {
         (_, EnvironmentState environmentState) {
           return StepperControl(
             title: const Text('# Posts'),
-            value: environmentState.get(key: numPostsKey).toString(),
+            value: environmentState.get(numPostsKey).toString(),
             onDecrementPressed: () async {
               environmentState.set(
-                key: numPostsKey,
-                value:
-                    max(0, (environmentState.get(key: numPostsKey) as int) - 1),
+                numPostsKey,
+                max(0, (environmentState.get(numPostsKey) as int) - 1),
               );
               // rebuildScene();
             },
             onIncrementPressed: () async {
               environmentState.set(
-                key: numPostsKey,
-                value: min((environmentState.get(key: numPostsKey) as int) + 1,
+                numPostsKey,
+                min((environmentState.get(numPostsKey) as int) + 1,
                     Post.fakePosts().length),
               );
             },
@@ -88,9 +87,7 @@ class WithPostsScene extends BasePostsListScene {
   Future<void> setUp(EnvironmentState environmentState) async {
     await super.setUp(environmentState);
     when(mockApi.fetchPosts()).thenAnswer((_) async {
-      return Post.fakePosts()
-          .take(environmentState.get(key: numPostsKey))
-          .toList();
+      return Post.fakePosts().take(environmentState.get(numPostsKey)).toList();
     });
   }
 }

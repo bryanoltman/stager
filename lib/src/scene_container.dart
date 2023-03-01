@@ -8,7 +8,6 @@ import 'environment/controls/display_size_picker.dart';
 import 'environment/controls/dropdown_control.dart';
 import 'environment/controls/stepper_control.dart';
 import 'environment/environment_control_panel.dart';
-import 'environment/state/basic_environment_state.dart';
 import 'environment/state/environment_state.dart';
 import 'scene.dart';
 
@@ -36,14 +35,7 @@ class _SceneContainerState extends State<SceneContainer> {
 
   Key _containerKey = UniqueKey();
 
-  // TODO: move these to EnvironmentState
   bool _isControlPanelExpanded = false;
-  double _textScale = 1;
-  bool _isDarkMode = false;
-  bool _showSemantics = false;
-  TargetPlatform? _targetPlatform;
-  num? _heightOverride;
-  num? _widthOverride;
 
   @override
   void initState() {
@@ -71,13 +63,6 @@ class _SceneContainerState extends State<SceneContainer> {
 
   void _resetScene() {
     setState(() {
-      // environmentState.basicState = BasicEnvironmentState.defaultState;
-      _textScale = 1;
-      _isDarkMode = false;
-      _showSemantics = false;
-      _targetPlatform = null;
-      _heightOverride = null;
-      _widthOverride = null;
       widget.scene.onEnvironmentReset();
       context.read<EnvironmentState>().reset();
       _rebuildScene();
@@ -98,12 +83,23 @@ class _SceneContainerState extends State<SceneContainer> {
   }
 
   double get _sceneHeight {
-    return _heightOverride?.toDouble() ?? MediaQuery.of(context).size.height;
+    final int? heightOverride = context
+        .read<EnvironmentState>()
+        .get<int>(EnvironmentState.heightOverrideKey);
+
+    if (heightOverride != null) {
+      return heightOverride.toDouble();
+    } else {
+      return MediaQuery.of(context).size.height;
+    }
   }
 
   double get _sceneWidth {
-    if (_widthOverride != null) {
-      return _widthOverride!.toDouble();
+    final int? widthOverride = context
+        .read<EnvironmentState>()
+        .get<int>(EnvironmentState.widthOverrideKey);
+    if (widthOverride != null) {
+      return widthOverride.toDouble();
     }
 
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -121,7 +117,8 @@ class _SceneContainerState extends State<SceneContainer> {
     return SizedBox(
       width: _panelWidth,
       child: EnvironmentControlPanel(
-        targetPlatform: _targetPlatform,
+        targetPlatform: environmentState
+            .get<TargetPlatform>(EnvironmentState.targetPlatformKey),
         children: <Widget>[
           if (Navigator.of(context).canPop())
             IconButton(
@@ -134,63 +131,56 @@ class _SceneContainerState extends State<SceneContainer> {
               'ToggleDarkModeControl',
             ),
             title: const Text('Dark Mode'),
-            isOn: _isDarkMode,
-            onChanged: (bool newValue) {
-              setState(() {
-                _isDarkMode = newValue;
-              });
-            },
+            isOn: environmentState.get<bool>(EnvironmentState.isDarkModeKey)!,
+            onChanged: (bool newValue) =>
+                environmentState.set(EnvironmentState.isDarkModeKey, newValue),
           ),
           BooleanControl(
             key: const ValueKey<String>(
               'ToggleBoldTextControl',
             ),
             title: const Text('Bold Text'),
-            isOn: environmentState.basicState.isTextBold,
-            onChanged: (bool newValue) {
-              setState(() {
-                final EnvironmentState container =
-                    context.read<EnvironmentState>();
-                container.basicState = container.basicState
-                    .rebuild((BasicEnvironmentStateBuilder builder) {
-                  builder.isTextBold = newValue;
-                  return builder.build();
-                });
-              });
-            },
+            isOn: environmentState.get<bool>(EnvironmentState.isTextBoldKey)!,
+            onChanged: (bool newValue) =>
+                environmentState.set(EnvironmentState.isTextBoldKey, newValue),
           ),
           BooleanControl(
             key: const ValueKey<String>(
               'ToggleSemanticsOverlayControl',
             ),
             title: const Text('Semantics'),
-            isOn: _showSemantics,
-            onChanged: (bool newValue) {
-              setState(() {
-                _showSemantics = newValue;
-              });
-            },
+            isOn:
+                environmentState.get<bool>(EnvironmentState.showSemanticsKey)!,
+            onChanged: (bool newValue) => environmentState.set(
+                EnvironmentState.showSemanticsKey, newValue),
           ),
           StepperControl(
-            key: const ValueKey<String>(
-              'TextScaleStepperControl',
-            ),
-            title: const Text('Text Scale'),
-            value: _textScale.toStringAsFixed(1),
-            onDecrementPressed: () => setState(() {
-              _textScale -= 0.1;
-            }),
-            onIncrementPressed: () => setState(() {
-              _textScale += 0.1;
-            }),
-          ),
+              key: const ValueKey<String>(
+                'TextScaleStepperControl',
+              ),
+              title: const Text('Text Scale'),
+              value: environmentState
+                  .get<double>(EnvironmentState.textScaleKey)!
+                  .toStringAsFixed(1),
+              onDecrementPressed: () {
+                environmentState.set(
+                  EnvironmentState.textScaleKey,
+                  environmentState.get<double>(EnvironmentState.textScaleKey)! -
+                      0.1,
+                );
+              },
+              onIncrementPressed: () {
+                environmentState.set(
+                  EnvironmentState.textScaleKey,
+                  environmentState.get<double>(EnvironmentState.textScaleKey)! +
+                      0.1,
+                );
+              }),
           DisplaySizePicker(
             defaultSize: _defaultSceneSize,
             didChangeSize: (num? width, num? height) {
-              setState(() {
-                _widthOverride = width;
-                _heightOverride = height;
-              });
+              environmentState.set(EnvironmentState.heightOverrideKey, height);
+              environmentState.set(EnvironmentState.widthOverrideKey, width);
             },
           ),
           DropdownControl<TargetPlatform>(
@@ -200,11 +190,12 @@ class _SceneContainerState extends State<SceneContainer> {
             ),
             items: TargetPlatform.values,
             onChanged: (TargetPlatform? newValue) => setState(() {
-              if (newValue != null) {
-                _targetPlatform = newValue;
-              }
+              environmentState.set(
+                  EnvironmentState.targetPlatformKey, newValue);
             }),
-            value: _targetPlatform ?? Theme.of(context).platform,
+            value: environmentState
+                    .get<TargetPlatform>(EnvironmentState.targetPlatformKey) ??
+                Theme.of(context).platform,
             itemTitleBuilder: (TargetPlatform platform) => platform.name,
           ),
           ...widget.scene.environmentControlBuilders
@@ -228,20 +219,27 @@ class _SceneContainerState extends State<SceneContainer> {
     return MediaQuery(
       key: const ValueKey<String>('SceneContainerMediaQuery'),
       data: MediaQuery.of(context).copyWith(
-        boldText: environmentState.basicState.isTextBold,
-        textScaleFactor: _textScale,
-        platformBrightness: _isDarkMode ? Brightness.dark : Brightness.light,
+        boldText: environmentState.get<bool>(EnvironmentState.isTextBoldKey),
+        textScaleFactor:
+            environmentState.get<double>(EnvironmentState.textScaleKey),
+        platformBrightness:
+            environmentState.get<bool>(EnvironmentState.isDarkModeKey)!
+                ? Brightness.dark
+                : Brightness.light,
       ),
       child: Theme(
-        data: Theme.of(context).copyWith(platform: _targetPlatform),
+        data: Theme.of(context).copyWith(
+            platform: environmentState
+                .get<TargetPlatform>(EnvironmentState.targetPlatformKey)),
         child: SizedBox(
           key: _containerKey,
           width: _sceneWidth,
           height: _sceneHeight,
           child: ClipRect(
-            child: _showSemantics
-                ? SemanticsDebugger(child: widget.scene.build(context))
-                : widget.scene.build(context),
+            child:
+                environmentState.get<bool>(EnvironmentState.showSemanticsKey)!
+                    ? SemanticsDebugger(child: widget.scene.build(context))
+                    : widget.scene.build(context),
           ),
         ),
       ),

@@ -28,7 +28,7 @@ abstract class UserDetailPageScene extends Scene {
   @override
   Future<void> setUp(EnvironmentState environmentState) async {
     await super.setUp(environmentState);
-    environmentState.setDefault(key: numPostsKey, value: 20);
+    environmentState.setDefault(numPostsKey, 20);
     mockApi = MockApi();
   }
 
@@ -95,17 +95,17 @@ class WithPostsUserDetailPageScene extends UserDetailPageScene {
       <EnvironmentControlBuilder>[
         (_, EnvironmentState state) => StepperControl(
               title: const Text('Post Count'),
-              value: state.get(key: numPostsKey).toString(),
+              value: state.get(numPostsKey).toString(),
               onDecrementPressed: () {
                 state.set(
-                  key: numPostsKey,
-                  value: max(0, state.get<int>(key: numPostsKey)! - 1),
+                  numPostsKey,
+                  max(0, state.get<int>(numPostsKey)! - 1),
                 );
               },
               onIncrementPressed: () {
                 state.set(
-                  key: numPostsKey,
-                  value: min(20, state.get<int>(key: numPostsKey)! + 1),
+                  numPostsKey,
+                  min(20, state.get<int>(numPostsKey)! + 1),
                 );
               },
             )
@@ -119,7 +119,7 @@ class WithPostsUserDetailPageScene extends UserDetailPageScene {
     await super.setUp(environmentState);
     when(mockApi.fetchPosts(user: user)).thenAnswer(
       (_) async => Post.fakePosts(user: user)
-          .take(environmentState.get<int>(key: numPostsKey)!)
+          .take(environmentState.get<int>(numPostsKey)!)
           .toList(),
     );
   }
@@ -132,17 +132,17 @@ class ComplexUserDetailPageScene extends UserDetailPageScene {
       <EnvironmentControlBuilder>[
         (_, EnvironmentState state) => StepperControl(
               title: const Text('Post Count'),
-              value: state.get(key: numPostsKey).toString(),
+              value: state.get(numPostsKey).toString(),
               onDecrementPressed: () {
                 state.set(
-                  key: numPostsKey,
-                  value: max(0, state.get<int>(key: numPostsKey)! - 1),
+                  numPostsKey,
+                  max(0, state.get<int>(numPostsKey)! - 1),
                 );
               },
               onIncrementPressed: () {
                 state.set(
-                  key: numPostsKey,
-                  value: min(20, state.get<int>(key: numPostsKey)! + 1),
+                  numPostsKey,
+                  min(20, state.get<int>(numPostsKey)! + 1),
                 );
               },
             )
@@ -161,7 +161,7 @@ class ComplexUserDetailPageScene extends UserDetailPageScene {
     );
     when(mockApi.fetchPosts(user: user)).thenAnswer(
       (_) async => Post.fakePosts()
-          .take(environmentState.get<int>(key: numPostsKey)!)
+          .take(environmentState.get<int>(numPostsKey)!)
           .toList(),
     );
   }

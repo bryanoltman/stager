@@ -12,10 +12,7 @@ class PostDetailPageScene extends Scene {
   @override
   Future<void> setUp(EnvironmentState environmentState) async {
     super.setUp(environmentState);
-    environmentState.setDefault(
-      key: _currentPostKey,
-      value: Post.fakePosts().first,
-    );
+    environmentState.setDefault(_currentPostKey, Post.fakePosts().first);
   }
 
   @override
@@ -28,7 +25,7 @@ class PostDetailPageScene extends Scene {
       <EnvironmentControlBuilder>[
         (_, EnvironmentState state) {
           return DropdownControl<Post>(
-              value: state.get<Post>(key: _currentPostKey)!,
+              value: state.get<Post>(_currentPostKey)!,
               title: const Text('Post'),
               items: Post.fakePosts(),
               onChanged: (Post? newPost) {
@@ -36,7 +33,7 @@ class PostDetailPageScene extends Scene {
                   return;
                 }
 
-                state.set(key: _currentPostKey, value: newPost);
+                state.set(_currentPostKey, newPost);
               });
         },
       ];
@@ -45,7 +42,7 @@ class PostDetailPageScene extends Scene {
   Widget build(BuildContext context) {
     return EnvironmentAwareApp(
       home: PostDetailPage(
-        post: context.read<EnvironmentState>().get<Post>(key: _currentPostKey)!,
+        post: context.read<EnvironmentState>().get<Post>(_currentPostKey)!,
       ),
     );
   }
