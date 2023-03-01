@@ -9,12 +9,15 @@ import 'package:stager/stager.dart';
 
 import '../../shared/api.dart';
 import '../../shared/post.dart';
-import '../user_detail/user_detail_page_scenes.dart';
 import 'posts_list_page.dart';
 
 // #docregion PostsListPageScene
 @GenerateMocks(<Type>[Api])
 import 'posts_list_page_scenes.mocks.dart';
+
+/// The [EnvironmentState] key used to set the number of posts shown by
+/// [WithPostsScene].
+const String numPostsKey = 'PostsListNumPosts';
 
 /// Defines a shared build method used by subclasses and a [MockApi] subclasses
 /// can use to control the behavior of the [PostsListPage].
