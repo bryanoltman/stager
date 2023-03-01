@@ -71,7 +71,7 @@ class WithPostsScene extends BasePostsListScene {
             onDecrementPressed: () async {
               environmentState.set(
                 numPostsKey,
-                max(0, (environmentState.get(numPostsKey) as int) - 1),
+                max(0, environmentState.get<int>(numPostsKey)! - 1),
               );
               // rebuildScene();
             },
@@ -79,7 +79,7 @@ class WithPostsScene extends BasePostsListScene {
               environmentState.set(
                 numPostsKey,
                 min(
-                  (environmentState.get(numPostsKey) as int) + 1,
+                  environmentState.get<int>(numPostsKey)! + 1,
                   Post.fakePosts().length,
                 ),
               );
