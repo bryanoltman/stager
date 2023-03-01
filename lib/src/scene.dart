@@ -144,12 +144,4 @@ abstract class Scene {
   /// **and call [rebuildScene()] afterwards.**
   List<EnvironmentControlBuilder> environmentControlBuilders =
       <EnvironmentControlBuilder>[];
-
-  /// Called when [EnvironmentControlPanel]'s "reset" button is pressed.
-  /// Override this function to reset any state controlled by the Scene's
-  /// [environmentControlBuilders]. After this function is executed, this Scene
-  /// will be rebuilt.
-  ///
-  /// TODO: is this still needed?
-  void onEnvironmentReset() {}
 }

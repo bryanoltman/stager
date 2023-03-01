@@ -63,7 +63,6 @@ class _SceneContainerState extends State<SceneContainer> {
 
   void _resetScene() {
     setState(() {
-      widget.scene.onEnvironmentReset();
       context.read<EnvironmentState>().reset();
       _rebuildScene();
     });
