@@ -266,8 +266,8 @@ class EnvironmentControlScene extends Scene {
   String get title => 'My Scene';
 
   @override
-  List<EnvironmentControl<dynamic>> get environmentControls =>
-      <EnvironmentControl<dynamic>>[
+  List<EnvironmentControl<Object?>> get environmentControls =>
+      <EnvironmentControl<Object?>>[
         EnvironmentControl<int?>(
           stateKey: '',
           defaultValue: null,

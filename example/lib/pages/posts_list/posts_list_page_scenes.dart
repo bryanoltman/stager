@@ -61,8 +61,8 @@ class WithPostsScene extends BasePostsListScene {
   String get title => 'With Posts';
 
   @override
-  List<EnvironmentControl<dynamic>> get environmentControls =>
-      <EnvironmentControl<dynamic>>[
+  List<EnvironmentControl<Object?>> get environmentControls =>
+      <EnvironmentControl<Object?>>[
         EnvironmentControl<int>(
           stateKey: numPostsKey,
           defaultValue: Post.fakePosts().length,
