@@ -15,8 +15,8 @@ class PostDetailPageScene extends Scene {
   /// This [Scene] overrides the otional [environmentControlBuilders] getter to
   /// add a custom control to the Stager environment control panel.
   @override
-  List<EnvironmentControl<dynamic>> get environmentControls =>
-      <EnvironmentControl<dynamic>>[
+  List<EnvironmentControl<Object?>> get environmentControls =>
+      <EnvironmentControl<Object?>>[
         EnvironmentControl<Post>(
           stateKey: _currentPostKey,
           defaultValue: Post.fakePosts().first,

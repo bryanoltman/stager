@@ -43,7 +43,7 @@ class _SceneContainerState extends State<SceneContainer> {
 
     final EnvironmentState environmentState = context.read<EnvironmentState>();
 
-    for (final EnvironmentControl<dynamic> control
+    for (final EnvironmentControl<Object?> control
         in widget.scene.environmentControls) {
       environmentState.setDefault(control.stateKey, control.defaultValue);
     }
@@ -205,7 +205,7 @@ class _SceneContainerState extends State<SceneContainer> {
             itemTitleBuilder: (TargetPlatform platform) => platform.name,
           ),
           ...widget.scene.environmentControls
-              .map((EnvironmentControl<dynamic> control) {
+              .map((EnvironmentControl<Object?> control) {
             return control.build(context, environmentState);
           }),
           const SizedBox(height: 10),

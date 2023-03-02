@@ -23,9 +23,8 @@ class EnvironmentControl<T> {
 
   final EnvironmentControlBuilder<T> builder;
 
-  Widget build(BuildContext context, EnvironmentState state) {
-    return builder(context, state.get<T>(stateKey)!, state);
-  }
+  Widget build(BuildContext context, EnvironmentState state) =>
+      builder(context, state.get<T>(stateKey)!, state);
 }
 
 /// The central class of Stager, used to demonstrate a single piece of UI.
@@ -160,6 +159,6 @@ abstract class Scene {
   /// To make effective use of this functionality, these widgets should
   /// mutate a property defined on this Scene in the various onChange callbacks
   /// **and call [rebuildScene()] afterwards.**
-  List<EnvironmentControl<dynamic>> environmentControls =
-      <EnvironmentControl<dynamic>>[];
+  List<EnvironmentControl<Object?>> environmentControls =
+      <EnvironmentControl<Object?>>[];
 }

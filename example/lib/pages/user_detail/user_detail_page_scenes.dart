@@ -90,8 +90,8 @@ class EmptyUserDetailPageScene extends UserDetailPageScene {
 /// A Scene showing the content state of the [UserDetailPage].
 class WithPostsUserDetailPageScene extends UserDetailPageScene {
   @override
-  List<EnvironmentControl<dynamic>> get environmentControls =>
-      <EnvironmentControl<dynamic>>[
+  List<EnvironmentControl<Object?>> get environmentControls =>
+      <EnvironmentControl<Object?>>[
         EnvironmentControl<int>(
           stateKey: numPostsKey,
           defaultValue: 20,
@@ -126,8 +126,8 @@ class WithPostsUserDetailPageScene extends UserDetailPageScene {
 /// A Scene showing the [UserDetailPage] for a [User] with a long name.
 class ComplexUserDetailPageScene extends UserDetailPageScene {
   @override
-  List<EnvironmentControl<dynamic>> get environmentControls =>
-      <EnvironmentControl<dynamic>>[
+  List<EnvironmentControl<Object?>> get environmentControls =>
+      <EnvironmentControl<Object?>>[
         EnvironmentControl<int>(
           stateKey: numPostsKey,
           defaultValue: 20,
