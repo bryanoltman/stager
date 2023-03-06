@@ -36,7 +36,7 @@ class SceneContainer extends StatefulWidget {
 }
 
 class _SceneContainerState extends State<SceneContainer> {
-  static const Duration _panelAnimationDuration = Duration(milliseconds: 250);
+  static const Duration panelAnimationDuration = Duration(milliseconds: 250);
   static const double panelDividerWidth = 1;
 
   Key containerKey = UniqueKey();
@@ -44,6 +44,32 @@ class _SceneContainerState extends State<SceneContainer> {
   late StreamSubscription<void> sceneReconstructSubscription;
 
   EnvironmentState get environmentState => widget.environmentState;
+
+  double get panelWidth => min(MediaQuery.of(context).size.width * 0.75, 300);
+  bool get isSmallScreen => MediaQuery.of(context).size.width < 600;
+
+  double get maxSceneHeight => MediaQuery.of(context).size.height;
+  double get maxSceneWidth => isSmallScreen
+      ? MediaQuery.of(context).size.width
+      : MediaQuery.of(context).size.width - panelWidth - panelDividerWidth;
+
+  double get sceneHeight {
+    final String? heightOverride = heightOverrideControl.currentValue;
+    if (heightOverride != null && double.tryParse(heightOverride) != null) {
+      return double.parse(heightOverride);
+    } else {
+      return maxSceneHeight;
+    }
+  }
+
+  double get sceneWidth {
+    final String? widthOverride = widthOverrideControl.currentValue;
+    if (widthOverride != null && double.tryParse(widthOverride) != null) {
+      return double.parse(widthOverride);
+    } else {
+      return maxSceneWidth;
+    }
+  }
 
   late final BooleanControl darkModeControl = BooleanControl(
     title: 'Dark Mode',
@@ -121,7 +147,7 @@ class _SceneContainerState extends State<SceneContainer> {
   void initState() {
     super.initState();
 
-    environmentState.addListener(_rebuildScene);
+    environmentState.addListener(rebuildScene);
 
     sceneReconstructSubscription = widget.scene.onNeedsReconstruct.listen((_) {
       // Create a new UniqueKey to force recreation of StatefulWidgets' states.
@@ -130,8 +156,8 @@ class _SceneContainerState extends State<SceneContainer> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       targetPlatformControl.updateValue(Theme.of(context).platform);
-      heightOverrideControl.updateValue(_sceneHeight.toStringAsFixed(0));
-      widthOverrideControl.updateValue(_sceneWidth.toStringAsFixed(0));
+      heightOverrideControl.updateValue(sceneHeight.toStringAsFixed(0));
+      widthOverrideControl.updateValue(sceneWidth.toStringAsFixed(0));
     });
   }
 
@@ -140,12 +166,12 @@ class _SceneContainerState extends State<SceneContainer> {
     sceneReconstructSubscription.cancel();
 
     if (context.mounted) {
-      environmentState.removeListener(_rebuildScene);
+      environmentState.removeListener(rebuildScene);
     }
     super.dispose();
   }
 
-  void _rebuildScene() {
+  void rebuildScene() {
     if (!mounted) {
       return;
     }
@@ -153,42 +179,16 @@ class _SceneContainerState extends State<SceneContainer> {
     setState(() {});
   }
 
-  void _resetScene() {
+  void resetScene() {
     setState(() {
       environmentState.reset();
-      _rebuildScene();
+      rebuildScene();
     });
-  }
-
-  double get _panelWidth => min(MediaQuery.of(context).size.width * 0.75, 300);
-  bool get isSmallScreen => MediaQuery.of(context).size.width < 600;
-
-  double get maxSceneHeight => MediaQuery.of(context).size.height;
-  double get maxSceneWidth => isSmallScreen
-      ? MediaQuery.of(context).size.width
-      : MediaQuery.of(context).size.width - _panelWidth - panelDividerWidth;
-
-  double get _sceneHeight {
-    final String? heightOverride = heightOverrideControl.currentValue;
-    if (heightOverride != null && double.tryParse(heightOverride) != null) {
-      return double.parse(heightOverride);
-    } else {
-      return maxSceneHeight;
-    }
-  }
-
-  double get _sceneWidth {
-    final String? widthOverride = widthOverrideControl.currentValue;
-    if (widthOverride != null && double.tryParse(widthOverride) != null) {
-      return double.parse(widthOverride);
-    } else {
-      return maxSceneWidth;
-    }
   }
 
   Widget _panel() {
     return SizedBox(
-      width: _panelWidth,
+      width: panelWidth,
       child: EnvironmentControlPanel(
         targetPlatform: targetPlatformControl.currentValue,
         children: <Widget>[
@@ -213,7 +213,7 @@ class _SceneContainerState extends State<SceneContainer> {
           const SizedBox(height: 10),
           Center(
             child: ElevatedButton(
-              onPressed: _resetScene,
+              onPressed: resetScene,
               child: const Text('Reset'),
             ),
           ),
@@ -237,8 +237,8 @@ class _SceneContainerState extends State<SceneContainer> {
         ),
         child: SizedBox(
           key: containerKey,
-          width: _sceneWidth,
-          height: _sceneHeight,
+          width: sceneWidth,
+          height: sceneHeight,
           child: ClipRect(
             child: (showSemanticsControl.currentValue)
                 ? SemanticsDebugger(child: widget.scene.build(context))
@@ -260,11 +260,11 @@ class _SceneContainerState extends State<SceneContainer> {
           padding: EdgeInsets.zero,
           alignment: Alignment.centerLeft,
           transform: Matrix4.translationValues(
-            isControlPanelExpanded ? 0 : -_panelWidth,
+            isControlPanelExpanded ? 0 : -panelWidth,
             0,
             0,
           ),
-          duration: _panelAnimationDuration,
+          duration: panelAnimationDuration,
           curve: Curves.easeOutCubic,
           child: SafeArea(
             child: Row(
@@ -283,7 +283,7 @@ class _SceneContainerState extends State<SceneContainer> {
                     });
                   },
                   child: AnimatedRotation(
-                    duration: _panelAnimationDuration,
+                    duration: panelAnimationDuration,
                     turns: isControlPanelExpanded ? 0.5 : 0.0,
                     child: const Icon(Icons.arrow_forward),
                   ),
