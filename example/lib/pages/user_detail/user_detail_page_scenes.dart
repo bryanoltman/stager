@@ -12,12 +12,21 @@ import '../../shared/user.dart';
 import '../posts_list/posts_list_page_scenes.mocks.dart';
 import 'user_detail_page.dart';
 
-/// The [EnvironmentState] key used to set the number of posts shown by
-/// [WithPostsUserDetailPageScene] and [ComplexUserDetailPageScene].
-const String numPostsKey = 'UserDetailNumPosts';
-
 /// A Scene demonstrating the [UserDetailPage].
 abstract class UserDetailPageScene extends Scene {
+  /// An example of an [EnvironmentControl] that is shared by multiple [Scenes].
+  ///
+  /// This is used by [WithPostsUserDetailPageScene] and
+  /// [ComplexUserDetailPageScene]. Changes the post count in either of these
+  /// scenes will be reflected in the other.
+  final StepperControl<int> postCountControl = StepperControl<int>(
+    title: 'Post Count',
+    stateKey: 'UserDetailNumPosts',
+    defaultValue: 20,
+    onDecrementPressed: (int currentValue) => max(0, currentValue - 1),
+    onIncrementPressed: (int currentValue) => min(20, currentValue + 1),
+  );
+
   /// A mock dependency of [UserDetailPage]. Mock the value of [Api.fetchPosts]
   /// to put the staged [UserDetailPage] into different states.
   late MockApi mockApi;
@@ -92,21 +101,7 @@ class WithPostsUserDetailPageScene extends UserDetailPageScene {
   @override
   List<EnvironmentControl<Object?>> get environmentControls =>
       <EnvironmentControl<Object?>>[
-        EnvironmentControl<int>(
-          stateKey: numPostsKey,
-          defaultValue: 20,
-          builder: (_, int currentValue, EnvironmentState state) =>
-              StepperControl(
-            title: const Text('Post Count'),
-            value: currentValue.toString(),
-            onDecrementPressed: () {
-              state.set(numPostsKey, max(0, currentValue - 1));
-            },
-            onIncrementPressed: () {
-              state.set(numPostsKey, min(20, currentValue + 1));
-            },
-          ),
-        ),
+        postCountControl,
       ];
 
   @override
@@ -117,7 +112,7 @@ class WithPostsUserDetailPageScene extends UserDetailPageScene {
     await super.setUp(environmentState);
     when(mockApi.fetchPosts(user: user)).thenAnswer(
       (_) async => Post.fakePosts(user: user)
-          .take(environmentState.get<int>(numPostsKey)!)
+          .take(postCountControl.currentValue)
           .toList(),
     );
   }
@@ -128,21 +123,7 @@ class ComplexUserDetailPageScene extends UserDetailPageScene {
   @override
   List<EnvironmentControl<Object?>> get environmentControls =>
       <EnvironmentControl<Object?>>[
-        EnvironmentControl<int>(
-          stateKey: numPostsKey,
-          defaultValue: 20,
-          builder: (_, int currentValue, EnvironmentState state) =>
-              StepperControl(
-            title: const Text('Post Count'),
-            value: currentValue.toString(),
-            onDecrementPressed: () {
-              state.set(numPostsKey, max(0, currentValue - 1));
-            },
-            onIncrementPressed: () {
-              state.set(numPostsKey, min(20, currentValue + 1));
-            },
-          ),
-        ),
+        postCountControl,
       ];
 
   @override
@@ -157,9 +138,8 @@ class ComplexUserDetailPageScene extends UserDetailPageScene {
       name: 'Super cool poster with great hot takes',
     );
     when(mockApi.fetchPosts(user: user)).thenAnswer(
-      (_) async => Post.fakePosts()
-          .take(environmentState.get<int>(numPostsKey)!)
-          .toList(),
+      (_) async =>
+          Post.fakePosts().take(postCountControl.currentValue).toList(),
     );
   }
 }

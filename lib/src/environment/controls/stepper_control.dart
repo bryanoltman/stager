@@ -1,47 +1,63 @@
 import 'package:flutter/material.dart';
 
 import '../environment_control_panel.dart';
+import 'environment_control.dart';
 
 /// An [EnvironmentControlPanel] widget that allows a user to decrease and
-/// increase a numerical value.
-class StepperControl extends StatelessWidget {
+/// increase a value.
+class StepperControl<T> extends EnvironmentControl<T> {
   /// An [EnvironmentControlPanel] widget that allows a user to decrease and
-  /// increase a numerical value.
-  const StepperControl({
-    super.key,
-    required this.title,
-    required this.value,
+  /// increase a value.
+  StepperControl({
+    required super.title,
+    required super.stateKey,
+    required super.defaultValue,
     required this.onDecrementPressed,
     required this.onIncrementPressed,
+    super.onValueUpdated,
+    this.displayValueBuilder,
+    super.environmentState,
   });
 
-  /// The name of the value being manipulated.
-  final Widget title;
-
-  /// The currently displayed value.
-  final String value;
-
   /// Executed when the increment button is pressed.
-  final VoidCallback onDecrementPressed;
+  final T Function(T currentValue) onDecrementPressed;
 
   /// Executed when the decrement button is pressed.
-  final VoidCallback onIncrementPressed;
+  final T Function(T currentValue) onIncrementPressed;
+
+  /// Returns a presentable String representation of [currentValue].
+  final String Function(T currentValue)? displayValueBuilder;
+
+  String get _displayValue {
+    if (displayValueBuilder != null) {
+      return displayValueBuilder!(currentValue!);
+    }
+
+    return currentValue.toString();
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget builder(
+    BuildContext conetxt,
+    T? currentValue,
+    void Function(T) updateValue,
+  ) {
     return Row(
+      key: ValueKey<String>(stateKey),
       children: <Widget>[
         SizedBox(
           width: EnvironmentControlPanel.labelWidth,
-          child: title,
+          child: Text(title),
         ),
         IconButton(
-          onPressed: onDecrementPressed,
+          // ignore: null_check_on_nullable_type_parameter
+          onPressed: () => updateValue(onDecrementPressed(currentValue!)),
           icon: const Icon(Icons.remove),
         ),
-        Text(value),
+        Text(_displayValue),
         IconButton(
-          onPressed: onIncrementPressed,
+          // ignore: null_check_on_nullable_type_parameter
+          onPressed: () => updateValue(onIncrementPressed(currentValue!)),
           icon: const Icon(Icons.add),
         ),
       ],

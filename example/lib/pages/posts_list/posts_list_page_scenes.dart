@@ -15,10 +15,6 @@ import 'posts_list_page.dart';
 @GenerateMocks(<Type>[Api])
 import 'posts_list_page_scenes.mocks.dart';
 
-/// The [EnvironmentState] key used to set the number of posts shown by
-/// [WithPostsScene].
-const String numPostsKey = 'PostsListNumPosts';
-
 /// Defines a shared build method used by subclasses and a [MockApi] subclasses
 /// can use to control the behavior of the [PostsListPage].
 abstract class BasePostsListScene extends Scene {
@@ -57,38 +53,36 @@ class EmptyListScene extends BasePostsListScene {
 
 /// A Scene showing the [PostsListPage] with [Post]s.
 class WithPostsScene extends BasePostsListScene {
+  /// Allows the number of posts shown in this Scene to be set in the control
+  /// panel.
+  ///
+  /// Because [PostListsPage] issues a request to fetch posts in [initState],
+  /// we need to call [setNeedsReconstruct] in the onValueUpdated callback to
+  /// tell Stager to fully recreate this Scene.
+  late final StepperControl<int> postCountStepperControl = StepperControl<int>(
+    title: 'Post Count',
+    stateKey: 'WithPostsScene.PostCount',
+    defaultValue: Post.fakePosts().length,
+    onDecrementPressed: (int currentValue) => max(0, currentValue - 1),
+    onIncrementPressed: (int currentValue) =>
+        min(currentValue + 1, Post.fakePosts().length),
+    onValueUpdated: (_) => setNeedsReconstruct(),
+  );
+
   @override
   String get title => 'With Posts';
 
   @override
   List<EnvironmentControl<Object?>> get environmentControls =>
-      <EnvironmentControl<Object?>>[
-        EnvironmentControl<int>(
-          stateKey: numPostsKey,
-          defaultValue: Post.fakePosts().length,
-          builder: (_, int currentValue, EnvironmentState state) {
-            return StepperControl(
-              title: const Text('# Posts'),
-              value: currentValue.toString(),
-              onDecrementPressed: () async {
-                state.set(numPostsKey, max(0, currentValue - 1));
-              },
-              onIncrementPressed: () async {
-                state.set(
-                  numPostsKey,
-                  min(currentValue + 1, Post.fakePosts().length),
-                );
-              },
-            );
-          },
-        ),
-      ];
+      <EnvironmentControl<Object?>>[postCountStepperControl];
 
   @override
   Future<void> setUp(EnvironmentState environmentState) async {
     await super.setUp(environmentState);
     when(mockApi.fetchPosts()).thenAnswer((_) async {
-      return Post.fakePosts().take(environmentState.get(numPostsKey)).toList();
+      return Post.fakePosts()
+          .take(postCountStepperControl.currentValue)
+          .toList();
     });
   }
 }

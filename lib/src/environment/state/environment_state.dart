@@ -1,15 +1,23 @@
 import 'package:flutter/widgets.dart';
 
-/// Values used to control the display of a [Scene].
-///
-///
+/// An observable key-value store containing values that control how Scenes are
+/// presented, such as whether dark mode is enabled, whether bold text is
+/// enabled, etc.
 class EnvironmentState extends ChangeNotifier {
+  /// Creates a new instance of [EnvironmentState] for testing purposes.
+  factory EnvironmentState.forTest() => EnvironmentState._internal();
+
   /// Creates an [EnvironmentState] with default values for dark mode, text
   /// scale, etc.
-  EnvironmentState() {
+  EnvironmentState._internal() {
     _stateMapDefaults = Map<String, dynamic>.from(builtInStateDefaults);
     _stateMap = Map<String, dynamic>.from(_stateMapDefaults);
   }
+
+  /// The [EnvironmentState] singleton.
+  static EnvironmentState get instance => _instance;
+
+  static final EnvironmentState _instance = EnvironmentState._internal();
 
   /// The number of font pixels for each logical pixel.
   static const String textScaleKey = 'EnvironmentState.textScale';
@@ -41,6 +49,11 @@ class EnvironmentState extends ChangeNotifier {
   /// If null, the current window/screen height will be used.
   static const String widthOverrideKey = 'EnvironmentState.widthOverride';
 
+  /// A screen size preset
+  ///
+  /// If null, the current window/screen size will be used.
+  static const String devicePreviewKey = 'EnvironmentState.devicePreviewKey';
+
   /// Default values for built-in state variables.
   static const Map<String, dynamic> builtInStateDefaults = <String, dynamic>{
     textScaleKey: 1.0,
@@ -50,6 +63,7 @@ class EnvironmentState extends ChangeNotifier {
     targetPlatformKey: null,
     heightOverrideKey: null,
     widthOverrideKey: null,
+    devicePreviewKey: null,
   };
 
   /// Stores current named environment state values.
@@ -58,8 +72,12 @@ class EnvironmentState extends ChangeNotifier {
   /// Stores default named environment state values.
   late final Map<String, dynamic> _stateMapDefaults;
 
-  /// Sets a default
-  void setDefault(String key, dynamic value) {
+  ///  a default [value] for [key].
+  ///Sets
+  /// Calling [EnvironmentState.reset] will set the current value for [key] to
+  /// [value]. If a default has already been set for [key], it will be
+  /// overwritten.
+  void setDefault(String key, Object? value) {
     _stateMapDefaults[key] = value;
 
     if (!_stateMap.containsKey(key)) {
@@ -81,7 +99,6 @@ class EnvironmentState extends ChangeNotifier {
     }
 
     _stateMap[key] = value;
-
     notifyListeners();
   }
 
@@ -89,7 +106,6 @@ class EnvironmentState extends ChangeNotifier {
   /// listeners.
   void reset() {
     _stateMap = Map<String, dynamic>.from(_stateMapDefaults);
-
     notifyListeners();
   }
 }

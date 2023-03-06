@@ -1,39 +1,36 @@
 import 'package:flutter/material.dart';
 
 import '../environment_control_panel.dart';
+import 'environment_control.dart';
 
-/// An [EnvironmentControlPanel] widget that allows a user to toggle an
-/// arbitrary environment value.
-class BooleanControl extends StatelessWidget {
-  /// An [EnvironmentControlPanel] widget that allows a user to toggle an
-  /// arbitrary environment value.
-  const BooleanControl({
-    super.key,
-    required this.title,
-    required this.isOn,
-    required this.onChanged,
+/// An [EnvironmentControl] for the manipulation of a boolean [EnvironmentState]
+/// variable.
+class BooleanControl extends EnvironmentControl<bool> {
+  /// An [EnvironmentControl] for the manipulation of a boolean [EnvironmentState]
+  /// variable.
+  BooleanControl({
+    required super.title,
+    required super.stateKey,
+    required super.defaultValue,
+    super.environmentState,
   });
 
-  /// The name of the value being controlled.
-  final Widget title;
-
-  /// Whether the value is toggled on or not.
-  final bool isOn;
-
-  /// Called when the [Switch] is toggled.
-  final void Function(bool) onChanged;
-
   @override
-  Widget build(BuildContext context) {
+  Widget builder(
+    BuildContext conetxt,
+    bool? currentValue,
+    void Function(bool) updateValue,
+  ) {
     return Row(
+      key: ValueKey<String>(stateKey),
       children: <Widget>[
         SizedBox(
           width: EnvironmentControlPanel.labelWidth,
-          child: title,
+          child: Text(title),
         ),
         Switch(
-          value: isOn,
-          onChanged: onChanged,
+          value: currentValue ?? false,
+          onChanged: updateValue,
         ),
       ],
     );
