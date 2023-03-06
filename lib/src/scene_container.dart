@@ -36,23 +36,44 @@ class SceneContainer extends StatefulWidget {
 }
 
 class _SceneContainerState extends State<SceneContainer> {
+  /// The length of the [EnvironmentControlPanel] show/hide animation.
   static const Duration panelAnimationDuration = Duration(milliseconds: 250);
+
+  /// The width of the divider between the [EnvironmentControlPanel] and the
+  /// body of the Scene.
   static const double panelDividerWidth = 1;
 
+  /// A key used to identify the Scene's parent widget. This is set to a new
+  /// [UniqueKey] value when [Scene.setNeedsReconstruct] is called to force
+  /// StatefulWidgets in the Scene to recreate their state.
   Key containerKey = UniqueKey();
+
+  /// Whether or not the [EnvironmentControlPanel] is expanded. Only applicable
+  /// on small screens.
   bool isControlPanelExpanded = false;
+
+  /// Used to listen to [Scene.setNeedsReconstruct].
   late StreamSubscription<void> sceneReconstructSubscription;
 
+  /// The backing environment state for this Scene.
   EnvironmentState get environmentState => widget.environmentState;
 
+  /// The width of the [EnvironmentControlPanel].
   double get panelWidth => min(MediaQuery.of(context).size.width * 0.75, 300);
-  bool get isSmallScreen => MediaQuery.of(context).size.width < 600;
 
+  /// Whether the screen is too small to accommodate a master-detail layout for
+  /// the [EnvironmentControlPanel] and the Scene.
+  bool get isControlPanelCollapsible => MediaQuery.of(context).size.width < 600;
+
+  /// The largest possible vertical dimension for the Scene.
   double get maxSceneHeight => MediaQuery.of(context).size.height;
-  double get maxSceneWidth => isSmallScreen
+
+  /// The largest possible horizontal dimension for the Scene.
+  double get maxSceneWidth => isControlPanelCollapsible
       ? MediaQuery.of(context).size.width
       : MediaQuery.of(context).size.width - panelWidth - panelDividerWidth;
 
+  /// Effective height for the Scene.
   double get sceneHeight {
     final String? heightOverride = heightOverrideControl.currentValue;
     if (heightOverride != null && double.tryParse(heightOverride) != null) {
@@ -62,6 +83,7 @@ class _SceneContainerState extends State<SceneContainer> {
     }
   }
 
+  /// Effective width for the Scene.
   double get sceneWidth {
     final String? widthOverride = widthOverrideControl.currentValue;
     if (widthOverride != null && double.tryParse(widthOverride) != null) {
@@ -319,7 +341,9 @@ class _SceneContainerState extends State<SceneContainer> {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.black,
-      child: isSmallScreen ? _smallScreenLayout() : _largeScreenLayout(),
+      child: isControlPanelCollapsible
+          ? _smallScreenLayout()
+          : _largeScreenLayout(),
     );
   }
 }
