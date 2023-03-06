@@ -1,69 +1,65 @@
 import 'package:flutter/material.dart';
 
 import '../environment_control_panel.dart';
+import 'environment_control.dart';
 
-/// An [EnvironmentControlPanel] widget that allows the user to choose from one
-/// of several options.
-class DropdownControl<T> extends StatelessWidget {
-  /// An [EnvironmentControlPanel] widget that allows the user to choose from one
-  /// of several options.
-  const DropdownControl({
-    super.key,
-    required this.title,
-    required this.value,
+/// An [EnvironmentControl] that allows the user to choose from one of several
+/// options.
+class DropdownControl<T> extends EnvironmentControl<T> {
+  /// An [EnvironmentControl] that allows the user to choose from one of several
+  /// options.
+  DropdownControl({
+    required super.title,
+    required super.stateKey,
+    required super.defaultValue,
     required this.items,
-    required this.onChanged,
+    super.onValueUpdated,
     this.itemTitleBuilder,
+    super.environmentState,
   });
-
-  /// The name of this config option.
-  final Widget title;
-
-  /// The currently selected item.
-  final T value;
 
   /// A list of all available items.
   final List<T> items;
 
-  /// Called when a [value] is changed.
-  final void Function(T?) onChanged;
+  String _titleForItem(T? item) {
+    if (itemTitleBuilder != null) {
+      return itemTitleBuilder!(item);
+    }
+
+    return item.toString();
+  }
 
   /// Used to customize the text of [items] in the drop down. Use this when
   /// overriding [T.toString()] is not possible or not desirable.
-  final String Function(T)? itemTitleBuilder;
-
-  String _titleForItem(T? item) {
-    if (item == null) {
-      return '';
-    }
-
-    if (itemTitleBuilder == null) {
-      return item.toString();
-    }
-
-    return itemTitleBuilder!(item);
-  }
+  final String Function(T?)? itemTitleBuilder;
 
   @override
-  Widget build(BuildContext context) {
+  Widget builder(
+      BuildContext conetxt, T? currentValue, void Function(T) updateValue) {
     return Row(
+      key: ValueKey<String>(stateKey),
       children: <Widget>[
         SizedBox(
           width: EnvironmentControlPanel.labelWidth,
-          child: title,
+          child: Text(title),
         ),
-        const SizedBox(width: 8),
-        DropdownButton<T>(
-          value: value,
-          items: items
-              .map(
-                (T? e) => DropdownMenuItem<T>(
-                  value: e,
-                  child: Text(_titleForItem(e)),
-                ),
-              )
-              .toList(),
-          onChanged: onChanged,
+        Expanded(
+          child: DropdownButton<T>(
+            isExpanded: true,
+            value: currentValue,
+            items: items
+                .map(
+                  (T? e) => DropdownMenuItem<T>(
+                    value: e,
+                    child: Text(_titleForItem(e)),
+                  ),
+                )
+                .toList(),
+            onChanged: (T? newValue) {
+              final T updatedValue = newValue ?? defaultValue;
+              updateValue(updatedValue);
+            },
+          ),
         ),
       ],
     );

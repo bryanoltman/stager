@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'environment/state/environment_state.dart';
 import 'scene.dart';
@@ -15,11 +14,22 @@ void runStagerApp({required List<Scene> scenes}) =>
 /// If only one Scene is provided, that Scene will be shown as though it had
 /// been navigated to from a list of Scenes.
 class StagerApp extends StatefulWidget {
-  /// Creates a [StagerApp] with the given [scenes].
-  const StagerApp({super.key, required this.scenes});
+  /// Creates a [StagerApp] with the given [scenes], which share
+  /// [environmentState]. If no value is provided for [environmentState], the
+  /// default [EnvironmentState.instance] will be used.
+  StagerApp({
+    super.key,
+    required this.scenes,
+    EnvironmentState? environmentState,
+  }) : environmentState = environmentState ?? EnvironmentState.instance;
 
   /// The [Scene]s being displayed by this app.
   final List<Scene> scenes;
+
+  /// An observable data store containing values that control how Scenes are
+  /// presented, such as whether dark mode is enabled, whether bold text is
+  /// enabled, etc.
+  final EnvironmentState environmentState;
 
   @override
   State<StagerApp> createState() => _StagerAppState();
@@ -28,15 +38,15 @@ class StagerApp extends StatefulWidget {
 class _StagerAppState extends State<StagerApp> {
   late Future<void> _sceneSetUpFuture;
 
-  bool get _isSingleScene => widget.scenes.length == 1;
+  bool get isSingleScene => widget.scenes.length == 1;
 
-  final EnvironmentState _environmentState = EnvironmentState();
+  EnvironmentState get environmentState => widget.environmentState;
 
   @override
   void initState() {
     super.initState();
-    if (_isSingleScene) {
-      _sceneSetUpFuture = widget.scenes.first.setUp(_environmentState);
+    if (isSingleScene) {
+      _sceneSetUpFuture = widget.scenes.first.setUp(environmentState);
     } else {
       _sceneSetUpFuture = Future<void>.value();
     }
@@ -53,12 +63,18 @@ class _StagerAppState extends State<StagerApp> {
           );
         }
 
-        return ChangeNotifierProvider<EnvironmentState>.value(
-          value: _environmentState,
-          child: MaterialApp(
-            home: _isSingleScene
-                ? SceneContainer(scene: widget.scenes.first)
-                : SceneList(scenes: widget.scenes),
+        return AnimatedBuilder(
+          animation: environmentState,
+          builder: (BuildContext context, _) => MaterialApp(
+            home: isSingleScene
+                ? SceneContainer(
+                    scene: widget.scenes.first,
+                    environmentState: environmentState,
+                  )
+                : SceneList(
+                    scenes: widget.scenes,
+                    environmentState: environmentState,
+                  ),
           ),
         );
       },

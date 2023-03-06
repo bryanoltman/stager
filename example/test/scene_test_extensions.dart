@@ -15,7 +15,7 @@ extension Testing on Scene {
     WidgetTester tester, [
     EnvironmentState? environmentState,
   ]) async {
-    await this.setUp(environmentState ?? EnvironmentState());
+    await this.setUp(environmentState ?? EnvironmentState.instance);
 
     await tester.pumpWidget(
       Builder(
