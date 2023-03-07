@@ -32,7 +32,7 @@ class TextInputControl extends EnvironmentControl<String?> {
 
   @override
   Widget builder(
-    BuildContext conetxt,
+    BuildContext context,
     String? currentValue,
     void Function(String) updateValue,
   ) {

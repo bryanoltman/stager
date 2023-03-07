@@ -44,7 +44,7 @@ abstract class EnvironmentControl<T> {
   /// Builds a widget that presents and manipulates the value of the environment
   /// variable keyed by [stateKey].
   Widget builder(
-    BuildContext conetxt,
+    BuildContext context,
     T? currentValue,
     void Function(T) updateValue,
   );

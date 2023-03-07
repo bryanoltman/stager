@@ -35,7 +35,10 @@ class DropdownControl<T> extends EnvironmentControl<T> {
 
   @override
   Widget builder(
-      BuildContext conetxt, T? currentValue, void Function(T) updateValue) {
+    BuildContext context,
+    T? currentValue,
+    void Function(T) updateValue,
+  ) {
     return Row(
       key: ValueKey<String>(stateKey),
       children: <Widget>[

@@ -38,7 +38,7 @@ class StepperControl<T> extends EnvironmentControl<T> {
 
   @override
   Widget builder(
-    BuildContext conetxt,
+    BuildContext context,
     T? currentValue,
     void Function(T) updateValue,
   ) {
