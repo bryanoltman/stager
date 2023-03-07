@@ -17,7 +17,7 @@ class BooleanControl extends EnvironmentControl<bool> {
 
   @override
   Widget builder(
-    BuildContext conetxt,
+    BuildContext context,
     bool? currentValue,
     void Function(bool) updateValue,
   ) {
