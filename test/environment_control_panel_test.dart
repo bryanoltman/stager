@@ -310,14 +310,14 @@ class EnvironmentControlScene extends Scene {
   String get title => 'My Scene';
 
   @override
-  List<EnvironmentControl<Object?>> get environmentControls =>
+  final List<EnvironmentControl<Object?>> environmentControls =
       <EnvironmentControl<Object?>>[
-        StepperControl<int>(
-          title: 'My Control',
-          stateKey: environmentControlKey.value,
-          defaultValue: 0,
-          onDecrementPressed: (int currentValue) => currentValue + 1,
-          onIncrementPressed: (int currentValue) => currentValue - 1,
-        ),
-      ];
+    StepperControl<int>(
+      title: 'My Control',
+      stateKey: environmentControlKey.value,
+      defaultValue: 0,
+      onDecrementPressed: (int currentValue) => currentValue + 1,
+      onIncrementPressed: (int currentValue) => currentValue - 1,
+    ),
+  ];
 }

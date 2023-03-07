@@ -99,10 +99,10 @@ class EmptyUserDetailPageScene extends UserDetailPageScene {
 /// A Scene showing the content state of the [UserDetailPage].
 class WithPostsUserDetailPageScene extends UserDetailPageScene {
   @override
-  List<EnvironmentControl<Object?>> get environmentControls =>
+  late final List<EnvironmentControl<Object?>> environmentControls =
       <EnvironmentControl<Object?>>[
-        postCountControl,
-      ];
+    postCountControl,
+  ];
 
   @override
   String get title => 'With posts';
@@ -121,10 +121,10 @@ class WithPostsUserDetailPageScene extends UserDetailPageScene {
 /// A Scene showing the [UserDetailPage] for a [User] with a long name.
 class ComplexUserDetailPageScene extends UserDetailPageScene {
   @override
-  List<EnvironmentControl<Object?>> get environmentControls =>
+  late final List<EnvironmentControl<Object?>> environmentControls =
       <EnvironmentControl<Object?>>[
-        postCountControl,
-      ];
+    postCountControl,
+  ];
 
   @override
   String get title => 'User with long name';

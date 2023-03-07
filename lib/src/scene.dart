@@ -110,7 +110,7 @@ abstract class Scene {
   ///   String get title => 'Counter';
   ///
   ///  @override
-  ///  List<EnvironmentControl<Object?>> get environmentControls =>
+  ///  final List<EnvironmentControl<Object?>> environmentControls =
   ///    <EnvironmentControl<Object?>>[
   ///      StepperControl<int>(
   ///        title: 'Count',
@@ -126,7 +126,7 @@ abstract class Scene {
   /// Note that the rebuild that occurs as a result of changing the backing
   /// [EnvironmentState] will not cause StatefulWidgets in your Scene to
   /// recreate their state. To do this, call [setNeedsReconstruct].
-  List<EnvironmentControl<Object?>> environmentControls =
+  List<EnvironmentControl<Object?>> get environmentControls =>
       <EnvironmentControl<Object?>>[];
 
   /// Emits an event when [setNeedsReconstruct] is called.

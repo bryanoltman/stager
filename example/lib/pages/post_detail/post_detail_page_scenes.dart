@@ -24,8 +24,10 @@ class PostDetailPageScene extends Scene {
   /// This [Scene] overrides the otional [environmentControls] getter to add a
   /// custom control to the Stager environment control panel.
   @override
-  List<EnvironmentControl<Object?>> get environmentControls =>
-      <EnvironmentControl<Object?>>[postSelectorControl];
+  late final List<EnvironmentControl<Object?>> environmentControls =
+      <EnvironmentControl<Object?>>[
+    postSelectorControl,
+  ];
 
   @override
   Widget build(BuildContext context) {

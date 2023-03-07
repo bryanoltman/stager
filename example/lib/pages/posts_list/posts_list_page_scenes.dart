@@ -73,8 +73,10 @@ class WithPostsScene extends BasePostsListScene {
   String get title => 'With Posts';
 
   @override
-  List<EnvironmentControl<Object?>> get environmentControls =>
-      <EnvironmentControl<Object?>>[postCountStepperControl];
+  late final List<EnvironmentControl<Object?>> environmentControls =
+      <EnvironmentControl<Object?>>[
+    postCountStepperControl,
+  ];
 
   @override
   Future<void> setUp(EnvironmentState environmentState) async {
