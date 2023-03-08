@@ -7,12 +7,7 @@ class EnvironmentState extends ChangeNotifier {
   /// Creates a new instance of [EnvironmentState] for testing purposes.
   factory EnvironmentState.forTest() => EnvironmentState._internal();
 
-  /// Creates an [EnvironmentState] with default values for dark mode, text
-  /// scale, etc.
-  EnvironmentState._internal() {
-    _stateMapDefaults = Map<String, dynamic>.from(builtInStateDefaults);
-    _stateMap = Map<String, dynamic>.from(_stateMapDefaults);
-  }
+  EnvironmentState._internal();
 
   /// The [EnvironmentState] singleton.
   static EnvironmentState get instance => _instance;
@@ -54,26 +49,14 @@ class EnvironmentState extends ChangeNotifier {
   /// If null, the current window/screen size will be used.
   static const String devicePreviewKey = 'EnvironmentState.devicePreviewKey';
 
-  /// Default values for built-in state variables.
-  static const Map<String, dynamic> builtInStateDefaults = <String, dynamic>{
-    textScaleKey: 1.0,
-    isDarkModeKey: false,
-    isTextBoldKey: false,
-    showSemanticsKey: false,
-    targetPlatformKey: null,
-    heightOverrideKey: null,
-    widthOverrideKey: null,
-    devicePreviewKey: null,
-  };
-
   /// Stores current named environment state values.
-  late Map<String, dynamic> _stateMap;
+  Map<String, dynamic> _stateMap = <String, dynamic>{};
 
   /// Stores default named environment state values.
-  late final Map<String, dynamic> _stateMapDefaults;
+  final Map<String, dynamic> _stateMapDefaults = <String, dynamic>{};
 
-  ///  a default [value] for [key].
-  ///Sets
+  /// Sets a default [value] for [key].
+  ///
   /// Calling [EnvironmentState.reset] will set the current value for [key] to
   /// [value]. If a default has already been set for [key], it will be
   /// overwritten.
