@@ -95,31 +95,33 @@ abstract class Scene {
   ///
   /// ```
   /// class CounterScene extends Scene {
-  ///  @override
-  ///  Widget build() {
-  ///    return EnvironmentAwareApp(
-  ///      home: Scaffold(
-  ///        body: Center(
-  ///          child: Text(count.toString()),
-  ///        ),
-  ///      ),
-  ///    );
-  ///  }
+  ///   final countControl = StepperControl<int>(
+  ///     title: 'Count',
+  ///     stateKey: 'CounterScene.CountKey',
+  ///     defaultValue: Post.fakePosts().length,
+  ///     onDecrementPressed: (int currentValue) => currentValue - 1,
+  ///     onIncrementPressed: (int currentValue) => currentValue + 1
+  ///   );
+  ///
+  ///   @override
+  ///   Widget build() {
+  ///     return EnvironmentAwareApp(
+  ///       home: Scaffold(
+  ///         body: Center(
+  ///           child: Text(countControl.currentValue.toString()),
+  ///         ),
+  ///       ),
+  ///     );
+  ///   }
   ///
   ///   @override
   ///   String get title => 'Counter';
   ///
-  ///  @override
-  ///  final List<EnvironmentControl<Object?>> environmentControls =
-  ///    <EnvironmentControl<Object?>>[
-  ///      StepperControl<int>(
-  ///        title: 'Count',
-  ///        stateKey: 'CounterScene.CountKey',
-  ///        defaultValue: Post.fakePosts().length,
-  ///        onDecrementPressed: (int currentValue) => currentValue - 1,
-  ///        onIncrementPressed: (int currentValue) => currentValue + 1
-  ///      ),
-  ///    ];
+  ///   @override
+  ///   final List<EnvironmentControl<Object?>> environmentControls =
+  ///     <EnvironmentControl<Object?>>[
+  ///       countControl,
+  ///     ];
   /// }
   /// ```
   ///
