@@ -63,7 +63,7 @@ A function that is called once before the Scene is displayed. This will generall
 
 #### `environmentControls`
 
-An optional list of `EnvironmentControl`s that allow you to add custom widgets to the Stager control panel. An `EnvironmentControl` provides a widget that allows the user to change values used when presenting a Scene. These values are persisted in a shared state, meaning controls can be reused between Scenes. Stager includes several of these controls that allow the user to toggle dark mode, change text scale, etc.
+An optional list of `EnvironmentControl`s that allow you to add custom widgets to the Stager control panel. An `EnvironmentControl` provides a widget that allows the user to change values used when presenting a Scene. State is preserved when the same controls are used in multiple scenes. Stager includes several of these controls that allow the user to toggle dark mode, change text scale, etc.
 
 These are useful if you want to manipulate things specific to your app, including:
 
