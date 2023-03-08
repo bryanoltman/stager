@@ -35,8 +35,8 @@ abstract class UserDetailPageScene extends Scene {
   User user = User.joeUser;
 
   @override
-  Future<void> setUp(EnvironmentState environmentState) async {
-    await super.setUp(environmentState);
+  Future<void> setUp() async {
+    await super.setUp();
     mockApi = MockApi();
   }
 
@@ -59,8 +59,8 @@ class LoadingUserDetailPageScene extends UserDetailPageScene {
   String get title => 'Loading';
 
   @override
-  Future<void> setUp(EnvironmentState environmentState) async {
-    await super.setUp(environmentState);
+  Future<void> setUp() async {
+    await super.setUp();
     when(mockApi.fetchPosts(user: user)).thenAnswer((_) {
       final Completer<List<Post>> completer = Completer<List<Post>>();
       return completer.future;
@@ -74,8 +74,8 @@ class ErrorUserDetailPageScene extends UserDetailPageScene {
   String get title => 'Error';
 
   @override
-  Future<void> setUp(EnvironmentState environmentState) async {
-    await super.setUp(environmentState);
+  Future<void> setUp() async {
+    await super.setUp();
     when(mockApi.fetchPosts(user: user)).thenAnswer(
       (_) async => Future<List<Post>>.error(
         Exception('on no!'),
@@ -90,8 +90,8 @@ class EmptyUserDetailPageScene extends UserDetailPageScene {
   String get title => 'Empty';
 
   @override
-  Future<void> setUp(EnvironmentState environmentState) async {
-    await super.setUp(environmentState);
+  Future<void> setUp() async {
+    await super.setUp();
     when(mockApi.fetchPosts(user: user)).thenAnswer((_) async => <Post>[]);
   }
 }
@@ -108,8 +108,8 @@ class WithPostsUserDetailPageScene extends UserDetailPageScene {
   String get title => 'With posts';
 
   @override
-  Future<void> setUp(EnvironmentState environmentState) async {
-    await super.setUp(environmentState);
+  Future<void> setUp() async {
+    await super.setUp();
     when(mockApi.fetchPosts(user: user)).thenAnswer(
       (_) async => Post.fakePosts(user: user)
           .take(postCountControl.currentValue)
@@ -130,8 +130,8 @@ class ComplexUserDetailPageScene extends UserDetailPageScene {
   String get title => 'User with long name';
 
   @override
-  Future<void> setUp(EnvironmentState environmentState) async {
-    await super.setUp(environmentState);
+  Future<void> setUp() async {
+    await super.setUp();
     user = const User(
       id: 1234,
       handle: '@asdf',

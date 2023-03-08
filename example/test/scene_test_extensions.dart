@@ -11,11 +11,8 @@ extension Testing on Scene {
   /// Calls [Scene.setUp] with either [environmentState] or a default
   /// [EnvironmentState] if none is provided and provides [Scene.build] with a
   /// valid BuildContext.
-  Future<void> setUpAndPump(
-    WidgetTester tester, [
-    EnvironmentState? environmentState,
-  ]) async {
-    await this.setUp(environmentState ?? EnvironmentState.instance);
+  Future<void> setUpAndPump(WidgetTester tester) async {
+    await this.setUp();
 
     await tester.pumpWidget(
       Builder(

@@ -33,7 +33,7 @@ abstract class BasePostsListScene extends Scene {
   }
 
   @override
-  Future<void> setUp(EnvironmentState environmentState) async {
+  Future<void> setUp() async {
     mockApi = MockApi();
   }
 }
@@ -44,8 +44,8 @@ class EmptyListScene extends BasePostsListScene {
   String get title => 'Empty List';
 
   @override
-  Future<void> setUp(EnvironmentState environmentState) async {
-    await super.setUp(environmentState);
+  Future<void> setUp() async {
+    await super.setUp();
     when(mockApi.fetchPosts()).thenAnswer((_) async => <Post>[]);
   }
 }
@@ -79,8 +79,8 @@ class WithPostsScene extends BasePostsListScene {
   ];
 
   @override
-  Future<void> setUp(EnvironmentState environmentState) async {
-    await super.setUp(environmentState);
+  Future<void> setUp() async {
+    await super.setUp();
     when(mockApi.fetchPosts()).thenAnswer((_) async {
       return Post.fakePosts()
           .take(postCountStepperControl.currentValue)
@@ -95,8 +95,8 @@ class LoadingScene extends BasePostsListScene {
   String get title => 'Loading';
 
   @override
-  Future<void> setUp(EnvironmentState environmentState) async {
-    await super.setUp(environmentState);
+  Future<void> setUp() async {
+    await super.setUp();
     final Completer<List<Post>> completer = Completer<List<Post>>();
     when(mockApi.fetchPosts()).thenAnswer((_) async => completer.future);
   }
@@ -108,8 +108,8 @@ class ErrorScene extends BasePostsListScene {
   String get title => 'Error';
 
   @override
-  Future<void> setUp(EnvironmentState environmentState) async {
-    await super.setUp(environmentState);
+  Future<void> setUp() async {
+    await super.setUp();
     when(mockApi.fetchPosts()).thenAnswer(
       (_) => Future<List<Post>>.error(Exception()),
     );

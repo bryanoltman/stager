@@ -46,7 +46,7 @@ class _StagerAppState extends State<StagerApp> {
   void initState() {
     super.initState();
     if (isSingleScene) {
-      _sceneSetUpFuture = widget.scenes.first.setUp(environmentState);
+      _sceneSetUpFuture = widget.scenes.first.setUp();
     } else {
       _sceneSetUpFuture = Future<void>.value();
     }

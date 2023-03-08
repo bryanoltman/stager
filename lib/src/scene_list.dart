@@ -37,7 +37,7 @@ class _SceneListState extends State<SceneList> {
           return ListTile(
             title: Text(widget.scenes[index].title),
             onTap: () async {
-              await scene.setUp(environmentState);
+              await scene.setUp();
               if (!mounted) {
                 return;
               }

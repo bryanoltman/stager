@@ -70,12 +70,7 @@ abstract class Scene {
   ///
   /// Analogous to StatefulWidget's `initState`, this is called once at app
   /// launch.
-  ///
-  /// Use [environmentState] to provide custom values to your UI. You will
-  /// likely set the value here using [EnvironmentState.setDefault], update
-  /// the value in one of your [environmentControlBuilders], and consume the
-  /// value in [build] using `context.read<EnvironmentState>().get`.
-  Future<void> setUp(EnvironmentState environmentState) async {}
+  Future<void> setUp() async {}
 
   /// Creates the widget tree for this Scene.
   ///

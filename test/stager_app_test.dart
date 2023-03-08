@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:stager/src/scene_container.dart';
 import 'package:stager/stager.dart';
 
-late EnvironmentState environmentState;
+EnvironmentState environmentState = EnvironmentState.forTest();
 
 void main() {
   final List<Scene> scenes = <Scene>[
@@ -12,7 +12,7 @@ void main() {
   ];
 
   setUp(() {
-    environmentState = EnvironmentState.forTest();
+    environmentState.reset();
   });
 
   testWidgets('displays a list of Scenes', (WidgetTester tester) async {
