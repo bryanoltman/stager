@@ -16,7 +16,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:stager/src/control_panel/environment_control_panel.dart';
+import 'package:stager/src/environment/environment_control_panel.dart';
 import 'package:stager/stager.dart';
 
 void main() {
@@ -25,6 +25,12 @@ void main() {
   // its right.
   // 800 - 300 - 1 = 499
   const double defaultSceneContainerWidth = 499;
+
+  late EnvironmentState environmentState;
+
+  setUp(() {
+    environmentState = EnvironmentState.forTest();
+  });
 
   MediaQuery sceneContainerMediaQuery() {
     return find
@@ -35,8 +41,10 @@ void main() {
   }
 
   Future<void> createAppAndShowControlPanel(WidgetTester tester) async {
-    final StagerApp stagerApp =
-        StagerApp(scenes: <Scene>[EnvironmentControlScene()]);
+    final StagerApp stagerApp = StagerApp(
+      scenes: <Scene>[EnvironmentControlScene()],
+      environmentState: environmentState,
+    );
     await tester.pumpWidget(stagerApp);
     await tester.pumpAndSettle();
   }
@@ -52,7 +60,7 @@ void main() {
 
     await tester.tap(
       find.descendant(
-        of: find.byKey(const ValueKey<String>('ToggleDarkModeControl')),
+        of: find.byKey(const ValueKey<String>(EnvironmentState.isDarkModeKey)),
         matching: find.byType(Switch),
       ),
     );
@@ -65,7 +73,7 @@ void main() {
 
     await tester.tap(
       find.descendant(
-        of: find.byKey(const ValueKey<String>('ToggleDarkModeControl')),
+        of: find.byKey(const ValueKey<String>(EnvironmentState.isDarkModeKey)),
         matching: find.byType(Switch),
       ),
     );
@@ -84,7 +92,7 @@ void main() {
 
     await tester.tap(
       find.descendant(
-        of: find.byKey(const ValueKey<String>('ToggleBoldTextControl')),
+        of: find.byKey(const ValueKey<String>(EnvironmentState.isTextBoldKey)),
         matching: find.byType(Switch),
       ),
     );
@@ -94,7 +102,7 @@ void main() {
 
     await tester.tap(
       find.descendant(
-        of: find.byKey(const ValueKey<String>('ToggleBoldTextControl')),
+        of: find.byKey(const ValueKey<String>(EnvironmentState.isTextBoldKey)),
         matching: find.byType(Switch),
       ),
     );
@@ -111,7 +119,9 @@ void main() {
 
     await tester.tap(
       find.descendant(
-        of: find.byKey(const ValueKey<String>('TextScaleStepperControl')),
+        of: find.byKey(
+          const ValueKey<String>(EnvironmentState.textScaleKey),
+        ),
         matching: find.byIcon(Icons.add),
       ),
     );
@@ -121,17 +131,23 @@ void main() {
 
     await tester.tap(
       find.descendant(
-        of: find.byKey(const ValueKey<String>('TextScaleStepperControl')),
+        of: find.byKey(
+          const ValueKey<String>(EnvironmentState.textScaleKey),
+        ),
         matching: find.byIcon(Icons.remove),
       ),
     );
+    await tester.pump();
+
     await tester.tap(
       find.descendant(
-        of: find.byKey(const ValueKey<String>('TextScaleStepperControl')),
+        of: find.byKey(
+          const ValueKey<String>(EnvironmentState.textScaleKey),
+        ),
         matching: find.byIcon(Icons.remove),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
 
     expect(sceneContainerMediaQuery().data.textScaleFactor, 0.9);
   });
@@ -144,7 +160,9 @@ void main() {
 
     await tester.tap(
       find.descendant(
-        of: find.byKey(const ValueKey<String>('ToggleSemanticsOverlayControl')),
+        of: find.byKey(
+          const ValueKey<String>(EnvironmentState.showSemanticsKey),
+        ),
         matching: find.byType(Switch),
       ),
     );
@@ -154,7 +172,9 @@ void main() {
 
     await tester.tap(
       find.descendant(
-        of: find.byKey(const ValueKey<String>('ToggleSemanticsOverlayControl')),
+        of: find.byKey(
+          const ValueKey<String>(EnvironmentState.showSemanticsKey),
+        ),
         matching: find.byType(Switch),
       ),
     );
@@ -185,7 +205,12 @@ void main() {
       expect(findSceneFrame().width, defaultSceneContainerWidth);
 
       await tester.enterText(
-        find.byKey(const ValueKey<String>('DisplayWidthTextField')),
+        find.descendant(
+          of: find.byKey(
+            const ValueKey<String>(EnvironmentState.widthOverrideKey),
+          ),
+          matching: find.byType(TextField),
+        ),
         '200',
       );
       await tester.pumpAndSettle();
@@ -194,7 +219,12 @@ void main() {
       expect(findSceneFrame().width, 200);
 
       await tester.enterText(
-        find.byKey(const ValueKey<String>('DisplayHeightTextField')),
+        find.descendant(
+          of: find.byKey(
+            const ValueKey<String>(EnvironmentState.heightOverrideKey),
+          ),
+          matching: find.byType(TextField),
+        ),
         '500',
       );
       await tester.pumpAndSettle();
@@ -210,14 +240,21 @@ void main() {
       expect(findSceneFrame().height, 600);
       expect(findSceneFrame().width, defaultSceneContainerWidth);
 
-      await tester.tap(find.text('Current Window'));
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(
+            const ValueKey<String>(EnvironmentState.devicePreviewKey),
+          ),
+          matching: find.byType(DropdownButton<ScreenSizePreset?>),
+        ),
+      );
       await tester.pumpAndSettle();
 
-      // We use [last] on this finder because each [DropdownMneuItem] will
+      // We use [last] on this finder because each [DropdownMenuItem] will
       // appear twice when the dropdown is expanded. See
       // https://github.com/flutter/flutter/blob/504e66920005937b6ffbc3ccd6b59d594b0e98c4/packages/flutter/test/material/dropdown_test.dart#L2230
       await tester.tap(
-        find.byKey(const ValueKey<String>('Galaxy Fold')).last,
+        find.text('Galaxy Fold (280 x 653)').last,
       );
       await tester.pumpAndSettle();
 
@@ -238,7 +275,14 @@ void main() {
     );
 
     // Open the dropdown.
-    await tester.tap(find.text(TargetPlatform.android.name));
+    await tester.tap(
+      find.descendant(
+        of: find.byKey(
+          const ValueKey<String>(EnvironmentState.targetPlatformKey),
+        ),
+        matching: find.byType(DropdownButton<TargetPlatform?>),
+      ),
+    );
     await tester.pumpAndSettle();
 
     // Select iOS from the list of target platforms.
@@ -273,7 +317,7 @@ class EnvironmentControlScene extends Scene {
       ValueKey<String>('EnvironmentControlButton');
 
   @override
-  Widget build() => const Text(
+  Widget build(BuildContext context) => const Text(
         'My Scene',
         key: EnvironmentControlScene.sceneKey,
       );
@@ -282,12 +326,14 @@ class EnvironmentControlScene extends Scene {
   String get title => 'My Scene';
 
   @override
-  List<EnvironmentControlBuilder> get environmentControlBuilders =>
-      <EnvironmentControlBuilder>[
-        (_, __) => ElevatedButton(
-              key: environmentControlKey,
-              onPressed: () {},
-              child: const Text('Click me'),
-            ),
-      ];
+  final List<EnvironmentControl<Object?>> environmentControls =
+      <EnvironmentControl<Object?>>[
+    StepperControl<int>(
+      title: 'My Control',
+      stateKey: environmentControlKey.value,
+      defaultValue: 0,
+      onDecrementPressed: (int currentValue) => currentValue + 1,
+      onIncrementPressed: (int currentValue) => currentValue - 1,
+    ),
+  ];
 }
