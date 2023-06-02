@@ -1,6 +1,6 @@
 ## 1.0.1
 
-- Upgrade to njewer analyzer.
+- Upgrade to newer analyzer.
 
 ## 1.0.0
 
