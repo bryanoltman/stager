@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Upgrade to njewer analyzer.
+
 ## 1.0.0
 
 - Better support for the environment control panel on larger screens.
