@@ -1,6 +1,6 @@
 ## 1.2.0
 
-- Upgrade the `analyzer` dependency to `^6.0.0`.
+- Widen the `analyzer` dependency version constraint to `'>=5.1.0 <8.0.0'`.
 
 ## 1.0.1
 
