@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Upgrade the `analyzer` dependency to `^6.0.0`.
+
 ## 1.0.1
 
 - Upgrade to newer analyzer.
