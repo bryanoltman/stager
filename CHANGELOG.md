@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Widen the `source_gen` dependency version constraint to `'>=1.2.7 <3.0.0'`.
+
 ## 1.1.0
 
 - Widen the `analyzer` dependency version constraint to `'>=5.1.0 <8.0.0'`.
