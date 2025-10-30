@@ -1,3 +1,9 @@
+## 1.3.0
+
+- Increase the `analyzer` dependency version constraint to `^8.2.0`.
+- Increase the `build` dependency version constraint to `>=3.0.0 <5.0.0`.
+- Widen the `source_gen` dependency version constraint to `'>=2.0.0 <5.0.0'`.
+
 ## 1.2.0
 
 - Widen the `source_gen` dependency version constraint to `'>=1.2.7 <3.0.0'`.
