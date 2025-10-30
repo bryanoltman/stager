@@ -37,9 +37,9 @@ class StagerAppGenerator extends Generator {
           ),
         )
         .where(
-          (ClassElement classElement) => classElement.accessors.any(
+          (ClassElement classElement) => classElement.getters.any(
             (PropertyAccessorElement accessor) =>
-                accessor.hasOverride && accessor.name == 'title',
+                accessor.metadata.hasOverride && accessor.name == 'title',
           ),
         );
     if (sceneElements.isEmpty) {
@@ -49,7 +49,8 @@ class StagerAppGenerator extends Generator {
     final StringBuffer buffer = StringBuffer();
 
     final String importsString = sceneElements
-        .map((ClassElement e) => e.source.shortName)
+        .map((ClassElement e) =>
+            e.firstFragment.libraryFragment.source.shortName)
         .toSet()
         .map((String shortName) => "import '$shortName';")
         .join('\n');
