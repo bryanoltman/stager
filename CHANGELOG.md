@@ -1,3 +1,7 @@
+## 1.4.0
+
+- Widen the `analyzer` dependency version constraint to `'>=8.2.0 <15.0.0'`.
+
 ## 1.3.0
 
 - Increase the `analyzer` dependency version constraint to `^8.2.0`.
