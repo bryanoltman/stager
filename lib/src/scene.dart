@@ -1,4 +1,25 @@
+/*
+ Copyright 2023 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      https://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
+
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
+
+import 'environment/controls/environment_control.dart';
+import 'environment/state/environment_state.dart';
 
 /// The central class of Stager, used to demonstrate a single piece of UI.
 ///
@@ -70,5 +91,65 @@ abstract class Scene {
   /// Creates the widget tree for this Scene.
   ///
   /// This is called on every rebuild, including by Hot Reload.
-  Widget build();
+  ///
+  /// [EnvironmentState] is available through [context] using
+  /// `context.read<EnvironmentState>()`. Get specific values using
+  /// `context.read<EnvironmentState>().get(key: myKey)`.
+  Widget build(BuildContext context);
+
+  /// Used to add custom controls to the [EnvironmentControlPanel].
+  ///
+  /// Stager provides several controls that should address most use cases,
+  /// including the [StepperControl], [DropdownControl], and [BooleanControl].
+  /// The example below demonstrates usage of the [StepperControl] to increment
+  /// and decrement a value that is reflected on screen.
+  ///
+  /// ```
+  /// class CounterScene extends Scene {
+  ///   final countControl = StepperControl<int>(
+  ///     title: 'Count',
+  ///     stateKey: 'CounterScene.CountKey',
+  ///     defaultValue: Post.fakePosts().length,
+  ///     onDecrementPressed: (int currentValue) => currentValue - 1,
+  ///     onIncrementPressed: (int currentValue) => currentValue + 1
+  ///   );
+  ///
+  ///   @override
+  ///   Widget build() {
+  ///     return EnvironmentAwareApp(
+  ///       home: Scaffold(
+  ///         body: Center(
+  ///           child: Text(countControl.currentValue.toString()),
+  ///         ),
+  ///       ),
+  ///     );
+  ///   }
+  ///
+  ///   @override
+  ///   String get title => 'Counter';
+  ///
+  ///   @override
+  ///   final List<EnvironmentControl<Object?>> environmentControls =
+  ///     <EnvironmentControl<Object?>>[
+  ///       countControl,
+  ///     ];
+  /// }
+  /// ```
+  ///
+  /// Note that the rebuild that occurs as a result of changing the backing
+  /// [EnvironmentState] will not cause StatefulWidgets in your Scene to
+  /// recreate their state. To do this, call [setNeedsReconstruct].
+  List<EnvironmentControl<Object?>> get environmentControls =>
+      <EnvironmentControl<Object?>>[];
+
+  /// Emits an event when [setNeedsReconstruct] is called.
+  Stream<void> get onNeedsReconstruct => _needsReconstructController.stream;
+
+  /// Call this function to force recreation of StatefulWidget state in your
+  /// Scene. Use this if you have an [EnvironmentControl] that changes a value
+  /// used in `initState`.
+  void setNeedsReconstruct() => _needsReconstructController.add(null);
+
+  final StreamController<void> _needsReconstructController =
+      StreamController<void>.broadcast();
 }
